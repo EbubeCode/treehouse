@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SecurityUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
     private final User user;
 
-    public SecurityUserDetails(User user) {
+    public CustomUserDetails(User user) {
         this.user = user;
     }
 
