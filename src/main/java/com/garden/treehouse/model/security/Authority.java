@@ -1,7 +1,6 @@
-package com.garden.treehouse.entities.security;
+package com.garden.treehouse.model.security;
 
 import org.springframework.security.core.GrantedAuthority;
-
 
 public class Authority implements GrantedAuthority{
 	private final String authority;

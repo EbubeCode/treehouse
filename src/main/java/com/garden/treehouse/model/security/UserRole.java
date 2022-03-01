@@ -1,6 +1,6 @@
-package com.garden.treehouse.entities.security;
+package com.garden.treehouse.model.security;
 
-import com.garden.treehouse.entities.User;
+import com.garden.treehouse.model.User;
 
 import javax.persistence.*;
 

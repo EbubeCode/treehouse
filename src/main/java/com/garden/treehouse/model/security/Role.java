@@ -1,4 +1,4 @@
-package com.garden.treehouse.entities.security;
+package com.garden.treehouse.model.security;
 
 import javax.persistence.*;
 import java.util.HashSet;

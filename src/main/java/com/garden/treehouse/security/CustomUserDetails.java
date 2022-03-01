@@ -1,7 +1,7 @@
 package com.garden.treehouse.security;
 
-import com.garden.treehouse.entities.User;
-import com.garden.treehouse.entities.security.Authority;
+import com.garden.treehouse.model.User;
+import com.garden.treehouse.model.security.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -36,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true
+        return true;
     }
 
     @Override
