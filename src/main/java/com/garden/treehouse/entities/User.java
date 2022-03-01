@@ -2,7 +2,9 @@ package com.garden.treehouse.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.garden.treehouse.entities.security.UserRole;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,6 +13,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -22,11 +26,7 @@ public class User {
 
     @Column(name="email", nullable = false, updatable = false)
     private String email;
-    private String phone;
     private boolean enabled=false;
-    private boolean credentialsNonExpired=true;
-    private boolean accountNonLocked=true;
-    private boolean accountNonExpired=true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JsonIgnore
