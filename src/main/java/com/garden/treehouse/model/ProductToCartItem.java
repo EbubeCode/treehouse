@@ -25,11 +25,11 @@ public class ProductToCartItem {
 		this.id = id;
 	}
 
-	public Product getBook() {
+	public Product getProduct() {
 		return product;
 	}
 
-	public void setBook(Product product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 
