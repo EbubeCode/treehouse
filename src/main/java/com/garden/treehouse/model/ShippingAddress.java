@@ -8,8 +8,7 @@ public class ShippingAddress {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String ShippingAddressName;
-	private String ShippingAddressStreet1;
-	private String ShippingAddressStreet2;
+	private String ShippingAddressStreet;
 	private String ShippingAddressCity;
 	private String ShippingAddressState;
 	private String ShippingAddressCountry;
@@ -38,23 +37,13 @@ public class ShippingAddress {
 	}
 
 
-	public String getShippingAddressStreet1() {
-		return ShippingAddressStreet1;
+	public String getShippingAddressStreet() {
+		return ShippingAddressStreet;
 	}
 
 
-	public void setShippingAddressStreet1(String shippingAddressStreet1) {
-		ShippingAddressStreet1 = shippingAddressStreet1;
-	}
-
-
-	public String getShippingAddressStreet2() {
-		return ShippingAddressStreet2;
-	}
-
-
-	public void setShippingAddressStreet2(String shippingAddressStreet2) {
-		ShippingAddressStreet2 = shippingAddressStreet2;
+	public void setShippingAddressStreet(String shippingAddressStreet) {
+		ShippingAddressStreet = shippingAddressStreet;
 	}
 
 

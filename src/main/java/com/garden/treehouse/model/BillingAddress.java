@@ -9,8 +9,7 @@ public class BillingAddress {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String BillingAddressName;
-	private String BillingAddressStreet1;
-	private String BillingAddressStreet2;
+	private String BillingAddressStreet;
 	private String BillingAddressCity;
 	private String BillingAddressState;
 	private String BillingAddressCountry;
@@ -35,20 +34,12 @@ public class BillingAddress {
 		BillingAddressName = billingAddressName;
 	}
 
-	public String getBillingAddressStreet1() {
-		return BillingAddressStreet1;
+	public String getBillingAddressStreet() {
+		return BillingAddressStreet;
 	}
 
-	public void setBillingAddressStreet1(String billingAddressStreet1) {
-		BillingAddressStreet1 = billingAddressStreet1;
-	}
-
-	public String getBillingAddressStreet2() {
-		return BillingAddressStreet2;
-	}
-
-	public void setBillingAddressStreet2(String billingAddressStreet2) {
-		BillingAddressStreet2 = billingAddressStreet2;
+	public void setBillingAddressStreet(String billingAddressStreet) {
+		BillingAddressStreet = billingAddressStreet;
 	}
 
 	public String getBillingAddressCity() {

@@ -11,6 +11,6 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     Optional<List<Product>> findByCategory(String category);
 
-    Optional<List<Product>> findByTitleContaining(String title);
+    Optional<List<Product>> findProductByNameContaining(String name);
 
 }
