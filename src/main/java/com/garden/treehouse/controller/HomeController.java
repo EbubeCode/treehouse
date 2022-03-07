@@ -18,10 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
@@ -90,7 +87,7 @@ public class HomeController {
 		return "productRack";
 	}
 	
-	@RequestMapping("/bookDetail")
+	@RequestMapping("/productDetail")
 	public String bookDetail(
 			@PathParam("id") Long id, Model model, Principal principal
 			) {
@@ -360,7 +357,7 @@ public class HomeController {
 		}
 	}
 	
-	@RequestMapping(value="/setDefaultPayment", method=RequestMethod.POST)
+	@PostMapping("/setDefaultPayment")
 	public String setDefaultPayment(
 			@ModelAttribute("defaultUserPaymentId") Long defaultPaymentId, Principal principal, Model model
 			) {
@@ -379,7 +376,7 @@ public class HomeController {
 		return "myProfile";
 	}
 	
-	@RequestMapping(value="/setDefaultShippingAddress", method=RequestMethod.POST)
+	@PostMapping("/setDefaultShippingAddress")
 	public String setDefaultShippingAddress(
 			@ModelAttribute("defaultShippingAddressId") Long defaultShippingId, Principal principal, Model model
 			) {
@@ -448,7 +445,7 @@ public class HomeController {
 		}
 	}
 	
-	@RequestMapping(value="/newUser", method = RequestMethod.POST)
+	@PostMapping("/newUser")
 	public String newUserPost(
 			HttpServletRequest request,
 			@ModelAttribute("email") String userEmail,
@@ -526,7 +523,7 @@ public class HomeController {
 		return "myProfile";
 	}
 	
-	@RequestMapping(value="/updateUserInfo", method=RequestMethod.POST)
+	@PostMapping("/updateUserInfo")
 	public String updateUserInfo(
 			@ModelAttribute("user") User user,
 			@ModelAttribute("newPassword") String newPassword,

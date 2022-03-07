@@ -52,7 +52,7 @@ public class SearchController {
 		return "productRack";
 	}
 	
-	@RequestMapping("/searchBook")
+	@RequestMapping("/searchProduct")
 	public String searchBook(
 			@ModelAttribute("keyword") String keyword,
 			Principal principal, Model model

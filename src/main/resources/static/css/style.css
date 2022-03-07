@@ -1,53 +1,36 @@
-
-hr {
-	border: none;
-	height: 1px;
-	color: #333;
-	background-color: #333;
+#show_bg {
+    background-image:
+            linear-gradient(to bottom, rgba(13, 13, 16, 0.86), rgba(24, 21, 23, 0.73)),
+            url('../image/tablePlant.jpg');
+    width: 80%;
+    height: 100vh;
+    background-size: cover;
+    color: white;
+    padding: 20px;
 }
 
-.container {
-	width: 90%;
+#show_bg1 {
+    background-image:
+            linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
+            url('../image/flowers.jpg');
+    width: 80%;
+    height: 100vh;
+    background-size: cover;
+    color: white;
+    padding: 20px;
 }
 
-.page-top {
-	margin-top: -70px;
+#show_bg2 {
+    background-image:
+            linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
+            url('../image/garden.jpg');
+    width: 80%;
+    height: 100vh;
+    background-size: cover;
+    color: white;
+    padding: 20px;
 }
 
-.navbar {
-  margin-bottom: 20px;
-}
-
-.box {
-	border: 1px solid red;
-}
-
-.home-headline{
-	font-family: 'Times New Roman', Times, serif;
-	font-size:24px;
-	color: #fff;
-	margin: auto;
-	text-align: center;
-	margin-top: -13px;
-}
-
-.home-headline span {
-	background-color: #231F20;
-    padding: 5px 22px;
-	
-}
-
-.section-headline {
-	font-family: 'Times New Roman', Times, serif;
-	font-size:24px;
-	color: #fff;
-	margin: auto;
-	text-align: center;
-	margin-top: 70px;
-}
-
-.section-headline span {
-	background-color: #231F20;
-    padding: 5px 22px;
-	
+body {
+    overflow-x: hidden;
 }
