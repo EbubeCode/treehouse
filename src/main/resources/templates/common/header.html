@@ -16,35 +16,12 @@
     <link th:href="@{/css/style.css}" rel="stylesheet">
 
     <!--    Owl Carousel-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-          integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
 
     <!--    font awesome cdn-->
     <script src="https://kit.fontawesome.com/beed960efc.js" crossorigin="anonymous"></script>
 
-    <style>
-        .carousel_img{
-            height: 250px!important;
-            width: 250px!important;
-        }
-
-        .product_name{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @media (max-width: 576px) {
-
-            .carousel_img{
-                display: block;
-                width: 50%;
-                margin: 0 auto;
-
-            }
-        }
-    </style>
 
 </head>
 
@@ -103,63 +80,150 @@
 </div>
 
 <div th:fragment="footer">
-    <br/> <br/>
-    <footer>
-        <div class="row">
-            <div class="col-xs-3 footerleft">
-                <div class="logofooter">
-                    <a th:href="@{/}"><img class="img-responsive"
-                                           th:src="@{/image/logo.jfif}" style="width: 200px;"/></a>
+    <!-- Footer -->
+    <footer class="page-footer mt-5" style=" background-color: #d0eae1">
+
+        <div style="background-color: #21d192;">
+            <div class="container">
+
+                <!-- Grid row-->
+                <div class="row py-4 d-flex align-items-center">
+
+                    <!-- Grid column -->
+                    <div class="col-md-6 col-lg-5 text-center text-light text-md-left mb-4 mb-md-0">
+                        <h6 class="mb-0">Get connected with us on social networks!</h6>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-6 col-lg-7 text-center">
+
+                        <!-- Facebook -->
+                        <a class="me-3 link-light footer-social-link">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+
+                        <!-- Twitter -->
+                        <a class="me-3 link-light footer-social-link">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <!-- Google +-->
+                        <a class="me-3 link-light footer-social-link">
+                            <i class="fa-brands fa-google"></i>
+                        </a>
+                        <!--Linkedin -->
+                        <a class="me-3 link-light footer-social-link">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <!--Instagram-->
+                        <a class="me-3 link-light footer-social-link">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+
+                    </div>
+                    <!-- Grid column -->
+
                 </div>
-                <p>
-                    Treehouse. <br/>The World's best garden products is here.
-                </p>
-            </div>
-            <div class="col-xs-3 paddingtop-bottom">
-                <h6 class="heading7">CONTACT</h6>
-                <ul class="post">
-                    <p>
-                        <i class="fa fa-map-pin"></i> Tree house<br/> online,
-                    </p>
-                    <p>
-                        <i class="fa fa-phone"></i> Phone : +2348039205683
-                    </p>
-                    <p>
-                        <i class="fa fa-envelope"></i> E-mail : chukwuma258@gmail.com
-                    </p>
-                </ul>
-            </div>
-            <div class="col-xs-3 paddingtop-bottom">
-                <h6 class="heading7">LINKS</h6>
-                <ul class="footer-ul">
-                    <li><a href="#"> Privacy Policy</a></li>
-                    <li><a href="#"> Terms &#38; Conditions</a></li>
-                    <li><a href="#"> Frequently Ask Questions</a></li>
-                </ul>
-            </div>
-            <div class="col-xs-3 paddingtop-bottom">
-                <h6 class="heading7">Open HOURS</h6>
-                <div class="post">
-                    <p>Monday - Saturday: 9am - 5pm</p>
-                    <p>Sunday: 10am - 3pm</p>
-                </div>
+                <!-- Grid row-->
+
             </div>
         </div>
+
+        <!-- Footer Links -->
+        <div class="container text-center text-md-left mt-5">
+
+            <!-- Grid row -->
+            <div class="row mt-3" style="color: #838080;">
+
+                <!-- Grid column -->
+                <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+
+                    <!-- Content -->
+                    <h6 class="text-uppercase footer-h6">Company name</h6>
+                    <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                    <p>Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
+                        consectetur
+                        adipisicing elit.</p>
+
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+
+                    <!-- Links -->
+                    <h6 class="text-uppercase footer-h6">Products</h6>
+                    <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                    <p>
+                        <a class="footer-link" href="#!">MDBootstrap</a>
+                    </p>
+                    <p>
+                        <a class="footer-link" href="#!">MDWordPress</a>
+                    </p>
+                    <p>
+                        <a class="footer-link" href="#!">BrandFlow</a>
+                    </p>
+                    <p>
+                        <a class="footer-link" href="#!">Bootstrap Angular</a>
+                    </p>
+
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+
+                    <!-- Links -->
+                    <h6 class="text-uppercase footer-h6">Useful links</h6>
+                    <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                    <p>
+                        <a class="footer-link" href="#!">Your Account</a>
+                    </p>
+                    <p>
+                        <a class="footer-link" href="#!">Become an Affiliate</a>
+                    </p>
+                    <p>
+                        <a  class="footer-link" href="#!">Shipping Rates</a>
+                    </p>
+                    <p>
+                        <a class="footer-link" href="#!">Help</a>
+                    </p>
+
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4" style="text-align: left">
+
+                    <!-- Links -->
+                    <h6 class="text-uppercase footer-h6">Contact</h6>
+                    <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                    <p>
+                        <i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                    <p>
+                        <i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                    <p>
+                        <i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                    <p>
+                        <i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+
+        </div>
+        <!-- Footer Links -->
+
+        <!-- Copyright -->
+        <div style="background-color: #cebfcd;" class="footer-copyright text-center text-black-50 py-3">© 2020 Copyright:
+            <a class="footer-link" href="https://mdbootstrap.com/"> MDBootstrap.com</a>
+        </div>
+        <!-- Copyright -->
+
     </footer>
-
-    <div class="copyright">
-        <div class="col-md-6">
-            <p>© 2020 - All Rights Reserved</p>
-        </div>
-        <div class="col-md-6">
-            <ul class="bottom_ul">
-                <li><a th:href="@{badRequestPage.html}">About us</a></li>
-                <li><a href="#">Tree</a></li>
-                <li><a href="#">House</a></li>
-
-            </ul>
-        </div>
-    </div>
+    <!-- Footer -->
 </div>
 
 
@@ -170,7 +234,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
             integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script th:src="@{/js/owlCarousel.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
 </div>
 </body>
 </html>

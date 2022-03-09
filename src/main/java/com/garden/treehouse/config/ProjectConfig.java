@@ -36,6 +36,7 @@ public class ProjectConfig {
             "/css/**",
             "/js/**",
             "/image/**",
+            "/product-image/**",
             "/",
             "/newUser",
             "/forgetPassword",
@@ -45,7 +46,7 @@ public class ProjectConfig {
             "/productDetail",
             "/faq",
             "/searchByCategory",
-            "/searchBook"
+            "/searchProduct"
     };
 
     @Bean

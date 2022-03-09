@@ -34,3 +34,23 @@
 body {
     overflow-x: hidden;
 }
+
+.card-img-top {
+    height: 40vh;
+    width: 100%;
+    object-fit: cover;
+}
+
+.footer-social-link{
+    text-decoration: none;
+}
+
+.footer-link{
+    color: #232222;
+    text-decoration: none;
+}
+
+.footer-h6{
+    color: black;
+    font-weight: bold;
+}
