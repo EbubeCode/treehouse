@@ -16,13 +16,16 @@ public class User{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id", nullable = false, updatable = false)
 	private Long id;
+
 	private String password;
 	private String firstName;
 	private String lastName;
+
+	@Transient
+	private String matchingPassword;
 	
 	@Column(name="email", nullable = false, updatable = false)
 	private String email;
-	private String imageUrl;
 	private boolean enabled=false;
 	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
@@ -121,5 +124,13 @@ public class User{
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getMatchingPassword() {
+		return matchingPassword;
+	}
+
+	public void setMatchingPassword(String matchingPassword) {
+		this.matchingPassword = matchingPassword;
 	}
 }

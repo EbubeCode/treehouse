@@ -1,7 +1,6 @@
 #show_bg {
-    background-image:
-            linear-gradient(to bottom, rgba(13, 13, 16, 0.86), rgba(24, 21, 23, 0.73)),
-            url('../image/tablePlant.jpg');
+    background-image: linear-gradient(to bottom, rgba(13, 13, 16, 0.86), rgba(24, 21, 23, 0.73)),
+    url('../image/tablePlant.jpg');
     width: 80%;
     height: 100vh;
     background-size: cover;
@@ -10,9 +9,8 @@
 }
 
 #show_bg1 {
-    background-image:
-            linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
-            url('../image/flowers.jpg');
+    background-image: linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
+    url('../image/flowers.jpg');
     width: 80%;
     height: 100vh;
     background-size: cover;
@@ -21,9 +19,8 @@
 }
 
 #show_bg2 {
-    background-image:
-            linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
-            url('../image/garden.jpg');
+    background-image: linear-gradient(to bottom, rgba(23, 23, 26, 0.52), rgba(24, 21, 23, 0.73)),
+    url('../image/garden.jpg');
     width: 80%;
     height: 100vh;
     background-size: cover;
@@ -41,16 +38,21 @@ body {
     object-fit: cover;
 }
 
-.footer-social-link{
+.footer-social-link {
     text-decoration: none;
 }
 
-.footer-link{
+.footer-link {
     color: #232222;
     text-decoration: none;
 }
 
-.footer-h6{
+.footer-h6 {
     color: black;
     font-weight: bold;
+}
+
+#top-div {
+    padding-top: 10px;
+    background: linear-gradient(to bottom, #eef3f3 0%, #21d192 100%);
 }

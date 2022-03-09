@@ -6,32 +6,53 @@
 <body>
 <div th:replace="common/header :: navbar"></div>
 
-<!--<div class="container">-->
-    <div class="row" style="padding-top: 10px">
-        <div  class="col-lg-3 col-sm-12 px-3">
-            <h2>
-                Lorem Ipsum
-            </h2>
-            <p>
-                Lorem ipsum .....
-            </p>
-        </div>
-        <div class="col-lg-9 col-sm-12">
-            <a th:href="@{#}">
-                <img th:src="@{/image/garden.jpg}" class="w-100" style="height: 50vh; object-fit: cover">
-            </a>
-        </div>
-
-
+<div class="row  bg-secondary" id="top-div" >
+    <div class="col-lg-3 col-sm-12 px-5">
+        <h2>
+            Lorem Ipsum
+        </h2>
+        <p>
+            Lorem ipsum .....
+        </p>
     </div>
+    <div class="col-lg-9 col-sm-12">
+        <a th:href="@{#}">
+            <img th:src="@{/image/planting.jpg}" class="w-100" style="height: 50vh; object-fit: cover">
+        </a>
+    </div>
+
+
+</div>
+
 <!--</div>-->
 <div class="container mt-5">
+    <h2>New Products</h2>
 
     <div class="owl-carousel owl-theme">
-        <div class="ms-2 me-2">
+        <div class="me-4">
             <div class="card">
                 <a th:href="@{#}">
-                    <img th:src="@{/image/flowers.jpg}" class="card-img-top">
+                    <img th:data-src="@{/image/planting.jpg}" class="card-img-top owl-lazy">
+                    <span class="mt-2 product_name"><h5>Flowers</h5></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="me-4">
+            <div class="card">
+                <a th:href="@{#}">
+                    <img th:data-src="@{/image/garden.jpg}" class="card-img-top owl-lazy">
+                    <span class="mt-2 product_name"><h5>Flowers</h5></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="me-4">
+            <div class="card">
+                <a th:href="@{#}">
+                    <img th:data-src="@{/image/tablePlant.jpg}" class="card-img-top owl-lazy">
                     <span class="mt-2 product_name"><h5>Flowers</h5></span>
                 </a>
             </div>
@@ -41,27 +62,47 @@
         <div class="ms-2 me-2">
             <div class="card">
                 <a th:href="@{#}">
-                    <img th:src="@{/image/garden.jpg}" class="card-img-top">
+                    <img th:data-src="@{/image/garden.jpg}" class="card-img-top owl-lazy">
                     <span class="mt-2 product_name"><h5>Flowers</h5></span>
                 </a>
             </div>
 
         </div>
 
-        <div class="ms-2 me-2">
+        <div class="me-4">
             <div class="card">
                 <a th:href="@{#}">
-                    <img th:src="@{/image/tablePlant.jpg}" class="card-img-top">
+                    <img th:data-src="@{/image/planting.jpg}" class="card-img-top owl-lazy">
                     <span class="mt-2 product_name"><h5>Flowers</h5></span>
                 </a>
             </div>
 
         </div>
 
-        <div class="ms-2 me-2">
+        <div class="me-4">
             <div class="card">
                 <a th:href="@{#}">
-                    <img th:src="@{/image/garden.jpg}" class="card-img-top">
+                    <img th:data-src="@{/image/garden.jpg}" class="card-img-top owl-lazy">
+                    <span class="mt-2 product_name"><h5>Flowers</h5></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="me-4">
+            <div class="card">
+                <a th:href="@{#}">
+                    <img th:data-src="@{/image/tablePlant.jpg}" class="card-img-top owl-lazy">
+                    <span class="mt-2 product_name"><h5>Flowers</h5></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="me-4">
+            <div class="card">
+                <a th:href="@{#}">
+                    <img th:data-src="@{/image/garden.jpg}" class="card-img-top owl-lazy">
                     <span class="mt-2 product_name"><h5>Flowers</h5></span>
                 </a>
             </div>
