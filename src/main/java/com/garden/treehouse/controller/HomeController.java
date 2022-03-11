@@ -2,8 +2,6 @@ package com.garden.treehouse.controller;
 
 import com.garden.treehouse.model.*;
 import com.garden.treehouse.model.security.PasswordResetToken;
-import com.garden.treehouse.model.security.Role;
-import com.garden.treehouse.model.security.UserRole;
 import com.garden.treehouse.services.*;
 import com.garden.treehouse.utility.MailConstructor;
 import com.garden.treehouse.utility.SecurityUtility;
@@ -38,11 +36,12 @@ public class HomeController {
     private final PasswordEncoder passwordEncoder;
     private final CartItemService cartItemService;
     private final OrderService orderService;
+    private final TokenService tokenService;
 
     public HomeController(JavaMailSender mailSender, MailConstructor mailConstructor, UserService userService,
                           UserDetailsService userSecurityService, ProductService productService,
                           UserPaymentService userPaymentService, UserShippingService userShippingService,
-                          PasswordEncoder passwordEncoder, CartItemService cartItemService, OrderService orderService) {
+                          PasswordEncoder passwordEncoder, CartItemService cartItemService, OrderService orderService, TokenService tokenService) {
         this.mailSender = mailSender;
         this.mailConstructor = mailConstructor;
         this.userService = userService;
@@ -53,6 +52,7 @@ public class HomeController {
         this.passwordEncoder = passwordEncoder;
         this.cartItemService = cartItemService;
         this.orderService = orderService;
+        this.tokenService = tokenService;
     }
 
     @RequestMapping("/")
@@ -446,58 +446,47 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/newUser")
+    @PostMapping("/signup")
     public String newUserPost(
             HttpServletRequest request,
-            @ModelAttribute("email") String userEmail,
-            Model model
-    ) throws Exception {
-        model.addAttribute("classActiveNewAccount", true);
-        model.addAttribute("email", userEmail);
-
-        if (userService.findByEmail(userEmail) != null) {
-            model.addAttribute("usernameExists", true);
-
-            return "myAccount";
+            @ModelAttribute("user") User user, Model model) throws Exception {
+        if (!user.getPassword().equals(user.getMatchingPassword())) {
+            model.addAttribute("errors", "Passwords don't match");
+            return "new_user";
         }
 
-        if (userService.findByEmail(userEmail) != null) {
-            model.addAttribute("emailExists", true);
+        if (userService.findByEmail(user.getEmail()) != null) {
+            model.addAttribute("errors", "Email already exists");
 
-            return "myAccount";
+            return "new_user";
         }
 
-        User user = new User();
-        user.setEmail(userEmail);
 
-        String password = SecurityUtility.randomPassword();
 
-        user.setPassword(passwordEncoder.encode(password));
+        userService.createUser(user);
 
-        Role role = new Role();
-        role.setRoleId(1);
-        role.setName("ROLE_USER");
-        Set<UserRole> userRoles = new HashSet<>();
-        userRoles.add(new UserRole(user, role));
-        userService.createUser(user, userRoles);
-
-        String token = UUID.randomUUID().toString();
-        userService.createPasswordResetTokenForUser(user, token);
-
-        String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
-        SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-
-        mailSender.send(email);
-
-        model.addAttribute("emailSent", "true");
-        model.addAttribute("orderList", user.getOrderList());
-
-        return "myAccount";
+        return "registration_consent";
     }
 
+    @GetMapping("/verify")
+    public String verifyEmail(@RequestParam("token_id") String tokenId, Model model) {
+        var response = tokenService.verifyToken(tokenId);
 
-//    @RequestMapping("/newUser")
+        return switch (response) {
+            case INVALID_TOKEN -> {
+                model.addAttribute("error", "to be invalid");
+                yield "verification_error";
+            }
+            case EXPIRED_TOKEN -> {
+                model.addAttribute("error", "to have expired");
+                yield "verification_error";
+            }
+            case VALID_TOKEN -> "forward:/login";
+
+        };
+    }
+
+    //    @RequestMapping("/newUser")
 //    public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
 //        PasswordResetToken passToken = userService.getPasswordResetToken(token);
 //
@@ -532,18 +521,6 @@ public class HomeController {
         return "new_user";
     }
 
-    @PostMapping("/signup")
-    public String registerUser(@ModelAttribute("user") User user, Model model) {
-        if(!user.getPassword().equals(user.getMatchingPassword())){
-            model.addAttribute("errors", "Passwords don't match");
-            return "new_user";
-        }
-
-        if (userService.createUser(user))
-            return "registration_consent";
-        model.addAttribute("errors", "Account with email already exists");
-        return "signup";
-    }
 
     @PostMapping("/updateUserInfo")
     public String updateUserInfo(
