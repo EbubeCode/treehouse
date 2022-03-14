@@ -44,12 +44,14 @@ public class ProjectConfig {
             "/productDetail",
             "/faq",
             "/searchByCategory",
-            "/searchProduct"
+            "/searchProduct",
+            "/verify",
+            "/forgotPassword"
     };
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.cors().disable().csrf().disable()
+        http.cors().disable()
 
                 .authorizeRequests().
                 /*	antMatchers("/**").*/
@@ -59,7 +61,7 @@ public class ProjectConfig {
                 .and()
 
                 .formLogin().failureUrl("/login?error=true")
-                /*.defaultSuccessUrl("/")*/
+                .defaultSuccessUrl("/myProfile")
                 .loginPage("/login").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

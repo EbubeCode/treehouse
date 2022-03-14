@@ -56,3 +56,7 @@ body {
     padding-top: 10px;
     background: linear-gradient(to bottom, #eef3f3 0%, #21d192 100%);
 }
+
+.acc-tabs:hover{
+    background-color: aqua;
+}

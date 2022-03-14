@@ -20,13 +20,15 @@ public record TokenService(VerificationTokenRepo tokenRepo,
             if (presentDate.after(token.getExpiryDate())) {
                 return VerifyTokenStates.EXPIRED_TOKEN;
             }
-            var user = userService.findByEmail(token.getUsername());
+            var user = userService.findByEmail(token.getUserEmail());
             if (user == null) {
                 return VerifyTokenStates.INVALID_TOKEN;
             }
             user.setEnabled(true);
             userService.save(user);
-            return VerifyTokenStates.VALID_TOKEN;
+            var tokenState = VerifyTokenStates.VALID_TOKEN;
+            tokenState.userEmail = user.getEmail();
+            return tokenState;
         }
         return VerifyTokenStates.INVALID_TOKEN;
     }

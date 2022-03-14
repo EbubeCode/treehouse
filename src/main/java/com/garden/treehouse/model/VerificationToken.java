@@ -18,6 +18,6 @@ public class VerificationToken {
     @Id
     private String tokenId;
 
-    private String username;
+    private String userEmail;
     private Date expiryDate;
 }

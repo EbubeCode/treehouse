@@ -1,11 +1,11 @@
 package com.garden.treehouse.eventlistener;
 
 import com.garden.treehouse.events.CreateUserEvent;
+import com.garden.treehouse.events.ForgotPasswordEvent;
 import com.garden.treehouse.model.VerificationToken;
 import com.garden.treehouse.repos.VerificationTokenRepo;
 import com.garden.treehouse.services.UserService;
 import com.garden.treehouse.utility.MailConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,17 +16,14 @@ import java.util.Date;
 import java.util.UUID;
 
 @Component
-public class CreationListener {
+public class EventListeners {
     private final JavaMailSender mailSender;
     private final MailConstructor mailConstructor;
     private final UserService userService;
     private final VerificationTokenRepo tokenRepo;
 
 
-    @Value("${baseUrl}")
-    private String baseUrl;
-
-    public CreationListener(JavaMailSender mailSender, MailConstructor mailConstructor, UserService userService, VerificationTokenRepo tokenRepo) {
+    public EventListeners(JavaMailSender mailSender, MailConstructor mailConstructor, UserService userService, VerificationTokenRepo tokenRepo) {
         this.mailSender = mailSender;
         this.mailConstructor = mailConstructor;
         this.userService = userService;
@@ -34,16 +31,16 @@ public class CreationListener {
     }
 
     @EventListener
-    public void createUserEvent(CreateUserEvent userEvent){
+    public void createUserEvent(CreateUserEvent userEvent) {
         var user = userEvent.user();
         var verificationToken = new VerificationToken();
-        verificationToken.setUsername(user.getEmail());
+        verificationToken.setUserEmail(user.getEmail());
         verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis()), 24));
         verificationToken.setTokenId(UUID.randomUUID().toString());
         verificationToken = tokenRepo.save(verificationToken);
         var tokenId = verificationToken.getTokenId();
 
-        SimpleMailMessage email = mailConstructor.constructResetTokenEmail(baseUrl, tokenId, user);
+        SimpleMailMessage email = mailConstructor.constructResetTokenEmail(tokenId, user);
 
         mailSender.send(email);
 
@@ -54,5 +51,22 @@ public class CreationListener {
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, hours);
         return calendar.getTime();
+    }
+
+    @EventListener
+    public void forgotPasswordEvent(ForgotPasswordEvent event) {
+        var userEmail = event.email();
+
+        var verificationToken = new VerificationToken();
+        verificationToken.setUserEmail(userEmail);
+        verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis()), 24));
+        verificationToken.setTokenId(UUID.randomUUID().toString());
+        verificationToken = tokenRepo.save(verificationToken);
+        var tokenId = verificationToken.getTokenId();
+
+        SimpleMailMessage email = mailConstructor.creatEmailUserForPasswordReset(tokenId, userEmail);
+
+        mailSender.send(email);
+
     }
 }

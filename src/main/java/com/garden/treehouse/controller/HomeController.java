@@ -1,13 +1,8 @@
 package com.garden.treehouse.controller;
 
 import com.garden.treehouse.model.*;
-import com.garden.treehouse.model.security.PasswordResetToken;
 import com.garden.treehouse.services.*;
-import com.garden.treehouse.utility.MailConstructor;
-import com.garden.treehouse.utility.SecurityUtility;
 import com.garden.treehouse.utility.USConstants;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,38 +16,33 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 @Controller
 public class HomeController {
-    private final JavaMailSender mailSender;
-    private final MailConstructor mailConstructor;
     private final UserService userService;
-    private final UserDetailsService userSecurityService;
     private final ProductService productService;
     private final UserPaymentService userPaymentService;
     private final UserShippingService userShippingService;
     private final PasswordEncoder passwordEncoder;
     private final CartItemService cartItemService;
     private final OrderService orderService;
-    private final TokenService tokenService;
 
-    public HomeController(JavaMailSender mailSender, MailConstructor mailConstructor, UserService userService,
-                          UserDetailsService userSecurityService, ProductService productService,
-                          UserPaymentService userPaymentService, UserShippingService userShippingService,
-                          PasswordEncoder passwordEncoder, CartItemService cartItemService, OrderService orderService, TokenService tokenService) {
-        this.mailSender = mailSender;
-        this.mailConstructor = mailConstructor;
+    public HomeController(UserService userService, ProductService productService,
+                          UserPaymentService userPaymentService,
+                          UserShippingService userShippingService,
+                          PasswordEncoder passwordEncoder, CartItemService cartItemService,
+                          OrderService orderService) {
         this.userService = userService;
-        this.userSecurityService = userSecurityService;
         this.productService = productService;
         this.userPaymentService = userPaymentService;
         this.userShippingService = userShippingService;
         this.passwordEncoder = passwordEncoder;
         this.cartItemService = cartItemService;
         this.orderService = orderService;
-        this.tokenService = tokenService;
     }
 
     @RequestMapping("/")
@@ -60,17 +50,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/login")
-    public String login(Principal principal) {
-        if (principal == null)
-            return "login";
-        return "index";
-    }
-
-    @RequestMapping("/faq")
-    public String faq() {
-        return "faq";
-    }
 
     @RequestMapping("/productRack")
     public String bookshelf(Model model, Principal principal) {
@@ -110,65 +89,6 @@ public class HomeController {
         return "productDetail";
     }
 
-    @RequestMapping("/forgetPassword")
-    public String forgetPassword(
-            HttpServletRequest request,
-            @ModelAttribute("email") String email,
-            Model model
-    ) {
-
-        model.addAttribute("classActiveForgetPassword", true);
-
-        User user = userService.findByEmail(email);
-
-        if (user == null) {
-            model.addAttribute("emailNotExist", true);
-            return "myAccount";
-        }
-
-        String password = SecurityUtility.randomPassword();
-
-        String hashedPassword = passwordEncoder.encode(password);
-        user.setPassword(hashedPassword);
-
-        userService.save(user);
-
-        String token = UUID.randomUUID().toString();
-        userService.createPasswordResetTokenForUser(user, token);
-
-        String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
-        SimpleMailMessage newEmail = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-
-        mailSender.send(newEmail);
-
-        model.addAttribute("forgetPasswordEmailSent", "true");
-
-
-        return "myAccount";
-    }
-
-    @RequestMapping("/myProfile")
-    public String myProfile(Model model, Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        model.addAttribute("user", user);
-        model.addAttribute("userPaymentList", user.getUserPaymentList());
-        model.addAttribute("userShippingList", user.getUserShippingList());
-        model.addAttribute("orderList", user.getOrderList());
-
-        UserShipping userShipping = new UserShipping();
-        model.addAttribute("userShipping", userShipping);
-
-        model.addAttribute("listOfCreditCards", true);
-        model.addAttribute("listOfShippingAddresses", true);
-
-        List<String> stateList = USConstants.listOfUSStatesCode;
-        Collections.sort(stateList);
-        model.addAttribute("stateList", stateList);
-        model.addAttribute("classActiveEdit", true);
-
-        return "myProfile";
-    }
 
     @RequestMapping("/listOfCreditCards")
     public String listOfCreditCards(
@@ -446,143 +366,6 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/signup")
-    public String newUserPost(
-            HttpServletRequest request,
-            @ModelAttribute("user") User user, Model model) throws Exception {
-        if (!user.getPassword().equals(user.getMatchingPassword())) {
-            model.addAttribute("errors", "Passwords don't match");
-            return "new_user";
-        }
-
-        if (userService.findByEmail(user.getEmail()) != null) {
-            model.addAttribute("errors", "Email already exists");
-
-            return "new_user";
-        }
-
-
-
-        userService.createUser(user);
-
-        return "registration_consent";
-    }
-
-    @GetMapping("/verify")
-    public String verifyEmail(@RequestParam("token_id") String tokenId, Model model) {
-        var response = tokenService.verifyToken(tokenId);
-
-        return switch (response) {
-            case INVALID_TOKEN -> {
-                model.addAttribute("error", "to be invalid");
-                yield "verification_error";
-            }
-            case EXPIRED_TOKEN -> {
-                model.addAttribute("error", "to have expired");
-                yield "verification_error";
-            }
-            case VALID_TOKEN -> "forward:/login";
-
-        };
-    }
-
-    //    @RequestMapping("/newUser")
-//    public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
-//        PasswordResetToken passToken = userService.getPasswordResetToken(token);
-//
-//        if (passToken == null) {
-//            String message = "Invalid Token.";
-//            model.addAttribute("message", message);
-//            return "redirect:/badRequest";
-//        }
-//
-//        User user = passToken.getUser();
-//        String username = user.getEmail();
-//
-//        UserDetails userDetails = userSecurityService.loadUserByUsername(username);
-//
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-//                userDetails.getAuthorities());
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        model.addAttribute("user", user);
-//
-//        model.addAttribute("classActiveEdit", true);
-//        model.addAttribute("orderList", user.getOrderList());
-//        return "myProfile";
-//    }
-    @GetMapping("/signup")
-    public String signUp(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("errors", null);
-
-        return "new_user";
-    }
-
-
-    @PostMapping("/updateUserInfo")
-    public String updateUserInfo(
-            @ModelAttribute("user") User user,
-            @ModelAttribute("newPassword") String newPassword,
-            Model model
-    ) throws Exception {
-        User currentUser = userService.findById(user.getId());
-
-        if (currentUser == null) {
-            throw new Exception("User not found");
-        }
-
-        /*check email already exists*/
-        if (userService.findByEmail(user.getEmail()) != null) {
-            if (userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
-                model.addAttribute("emailExists", true);
-                return "myProfile";
-            }
-        }
-
-        /*check username already exists*/
-        User oldUser = userService.findByEmail(user.getEmail());
-        if (oldUser != null) {
-            if (!oldUser.getId().equals(currentUser.getId())) {
-                model.addAttribute("email", true);
-                return "myProfile";
-            }
-        }
-
-//		update password
-        if (newPassword != null && !newPassword.isEmpty()) {
-            String dbPassword = currentUser.getPassword();
-            if (passwordEncoder.matches(user.getPassword(), dbPassword)) {
-                currentUser.setPassword(passwordEncoder.encode(newPassword));
-            } else {
-                model.addAttribute("incorrectPassword", true);
-
-                return "myProfile";
-            }
-        }
-
-        currentUser.setFirstName(user.getFirstName());
-        currentUser.setLastName(user.getLastName());
-        currentUser.setEmail(user.getEmail());
-
-        userService.save(currentUser);
-
-        model.addAttribute("updateSuccess", true);
-        model.addAttribute("user", currentUser);
-        model.addAttribute("classActiveEdit", true);
-
-        UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getEmail());
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-                userDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        model.addAttribute("orderList", user.getOrderList());
-
-        return "myProfile";
-    }
 
     @RequestMapping("/orderDetail")
     public String orderDetail(

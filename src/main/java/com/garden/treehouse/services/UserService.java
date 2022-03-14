@@ -83,6 +83,50 @@ public class UserService {
 
     }
 
+
+    @Transactional
+    public String createAdmin(String password) {
+        var opAdmin = userRepository.findByEmail("admin");
+
+        if (opAdmin.isPresent()) {
+            var admin = opAdmin.get();
+            admin.setPassword(passwordEncoder.encode(password));
+            userRepository.save(admin);
+            return "Admin account already exists --> password has been updated";
+        }
+
+        var admin = new User();
+
+        admin.setPassword(passwordEncoder.encode(password));
+        Role role = new Role();
+        role.setRoleId(1);
+        role.setName("ROLE_USER");
+        Role role1 = new Role();
+        role1.setRoleId(2);
+        role1.setName("ROLE_ADMIN");
+
+        Set<UserRole> userRoles = new HashSet<>();
+
+        userRoles.add(new UserRole(admin, role));
+        userRoles.add(new UserRole(admin, role1));
+
+        for (UserRole ur : userRoles)
+            roleRepository.save(ur.getRole());
+
+        admin.getUserRoles().addAll(userRoles);
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(admin);
+        admin.setShoppingCart(shoppingCart);
+
+        admin.setUserShippingList(new ArrayList<UserShipping>());
+        admin.setUserPaymentList(new ArrayList<UserPayment>());
+
+        userRepository.save(admin);
+        return "Admin account created successfully.";
+
+    }
+
     public User save(User user) {
         return userRepository.save(user);
     }

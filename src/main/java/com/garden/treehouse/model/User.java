@@ -24,6 +24,11 @@ public class User {
     @Transient
     private String matchingPassword;
 
+
+
+    @Transient
+    private String oldPassword;
+
     @Column(name = "email", nullable = false, updatable = false)
     private String email;
     private boolean enabled = false;
@@ -140,5 +145,13 @@ public class User {
 
     public void setMatchingPassword(String matchingPassword) {
         this.matchingPassword = matchingPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 }
