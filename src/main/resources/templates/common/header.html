@@ -9,7 +9,7 @@
     <title>Tree house</title>
 
     <link rel="stylesheet" th:href="@{/css/style.build.tailwind.css}">
-
+    <link rel="stylesheet" th:href="@{/css/style.dev.tailwind.css}">
     <!--    My css-->
     <link th:href="@{/css/style.css}" rel="stylesheet">
 
@@ -17,64 +17,99 @@
     <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
     <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
 
-    <!--    font awesome cdn-->
-    <script src="https://kit.fontawesome.com/beed960efc.js" crossorigin="anonymous"></script>
+    <!--    &lt;!&ndash;    font awesome cdn&ndash;&gt;-->
+    <!--    <script src="https://kit.fontawesome.com/beed960efc.js" crossorigin="anonymous"></script>-->
 
 
 </head>
 
 <body>
 <div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
-                    aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" th:href="@{/}"><i class="fa-solid fa-house-chimney"></i> Tree house</a>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown"><a th:href="@{/productRack}"
-                                                     class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"
-                                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">Products</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" th:href="@{/productRack}">Browse All Products</a></li>
-                            <li><a th:href="@{/searchByCategory(category='Plants')}" class="dropdown-item">Plants</a>
-                            </li>
-                            <li><a th:href="@{/searchByCategory(category='Vegetables')}" class="dropdown-item">Vegetables</a>
-                            </li>
-                            <li><a th:href="@{/searchByCategory(category='Fruits')}" class="dropdown-item">Fruits</a>
-                            </li>
-                            <li><a th:href="@{/searchByCategory(category='Seeds')}" class="dropdown-item">Seeds</a></li>
-                            <li><a th:href="@{/searchByCategory(category='Tools')}" class="dropdown-item">Tools</a></li>
-                            <li><a th:href="@{/faq}" class="dropdown-item">FAQ</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <form class="d-flex" th:action="@{/searchProduct}" method="post">
-                            <input class="form-control me-2" type="search" placeholder="Product name"
-                                   aria-label="Search">
-                            <button class="btn btn-outline-light" type="submit">Search</button>
-                        </form>
-                    </li>
-
-                </ul>
-                <ul class="navbar-nav me-right mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/shoppingCart/cart}"><i
-                            class="fa-solid fa-cart-shopping"></i>
-                        SHOPPING CART</a></li>
-                    <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"> MY
-                        ACCOUNT</a></li>
-                    <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/myProfile}">
-                        MY ACCOUNT</a></li>
-                    <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">
-                        LOGOUT</a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
+    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-3">
+        <a th:href=""
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current h-15 w-15 mr-2"  viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <span class="font-semibold text-sm tracking-tight inline">Tree House</span>
         </div>
-        <!--/.container-fluid -->
+        <div class="block lg:hidden">
+            <button class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+            <div class="text-sm lg:flex-grow">
+                <a href="#responsive-header"
+                   class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Docs
+                </a>
+                <a href="#responsive-header"
+                   class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Examples
+                </a>
+                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
+                    Blog
+                </a>
+            </div>
+            <div>
+                <a href="#"
+                   class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Download</a>
+            </div>
+        </div>
     </nav>
+<!--    <nav class="navbar navbar-expand-lg navbar-dark bg-success">-->
+<!--        <div class="container">-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"-->
+<!--                    aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--            <a class="navbar-brand" th:href="@{/}"><i class="fa-solid fa-house-chimney"></i> Tree house</a>-->
+<!--            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">-->
+<!--                <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                    <li class="nav-item dropdown"><a th:href="@{/productRack}"-->
+<!--                                                     class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"-->
+<!--                                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">Products</a>-->
+<!--                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+<!--                            <li><a class="dropdown-item" th:href="@{/productRack}">Browse All Products</a></li>-->
+<!--                            <li><a th:href="@{/searchByCategory(category='Plants')}" class="dropdown-item">Plants</a>-->
+<!--                            </li>-->
+<!--                            <li><a th:href="@{/searchByCategory(category='Vegetables')}" class="dropdown-item">Vegetables</a>-->
+<!--                            </li>-->
+<!--                            <li><a th:href="@{/searchByCategory(category='Fruits')}" class="dropdown-item">Fruits</a>-->
+<!--                            </li>-->
+<!--                            <li><a th:href="@{/searchByCategory(category='Seeds')}" class="dropdown-item">Seeds</a></li>-->
+<!--                            <li><a th:href="@{/searchByCategory(category='Tools')}" class="dropdown-item">Tools</a></li>-->
+<!--                            <li><a th:href="@{/faq}" class="dropdown-item">FAQ</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <form class="d-flex" th:action="@{/searchProduct}" method="post">-->
+<!--                            <input class="form-control me-2" type="search" placeholder="Product name"-->
+<!--                                   aria-label="Search">-->
+<!--                            <button class="btn btn-outline-light" type="submit">Search</button>-->
+<!--                        </form>-->
+<!--                    </li>-->
+
+<!--                </ul>-->
+<!--                <ul class="navbar-nav me-right mb-2 mb-lg-0">-->
+<!--                    <li class="nav-item"><a class="nav-link" th:href="@{/shoppingCart/cart}"><i-->
+<!--                            class="fa-solid fa-cart-shopping"></i>-->
+<!--                        SHOPPING CART</a></li>-->
+<!--                    <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"> MY-->
+<!--                        ACCOUNT</a></li>-->
+<!--                    <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/myProfile}">-->
+<!--                        MY ACCOUNT</a></li>-->
+<!--                    <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">-->
+<!--                        LOGOUT</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;/.nav-collapse &ndash;&gt;-->
+<!--        </div>-->
+<!--        &lt;!&ndash;/.container-fluid &ndash;&gt;-->
+<!--    </nav>-->
 </div>
 
 <div th:fragment="footer">
