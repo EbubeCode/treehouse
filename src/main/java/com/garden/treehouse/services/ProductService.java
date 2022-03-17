@@ -60,4 +60,12 @@ public class ProductService{
 		return activeProducts;
 	}
 
+	public String save(Product product) {
+		productRepository.save(product);
+		return "Book saved successfully";
+	}
+
+	public void deleteById(long id) {
+		productRepository.deleteById(id);
+	}
 }

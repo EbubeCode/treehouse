@@ -88,6 +88,7 @@ public class UserService {
     public String createAdmin(String password) {
         var opAdmin = userRepository.findByEmail("admin");
 
+        System.out.println(password);
         if (opAdmin.isPresent()) {
             var admin = opAdmin.get();
             admin.setPassword(passwordEncoder.encode(password));
@@ -98,6 +99,7 @@ public class UserService {
         var admin = new User();
 
         admin.setPassword(passwordEncoder.encode(password));
+
         Role role = new Role();
         role.setRoleId(1);
         role.setName("ROLE_USER");
@@ -114,6 +116,9 @@ public class UserService {
             roleRepository.save(ur.getRole());
 
         admin.getUserRoles().addAll(userRoles);
+
+        admin.setEmail("admin");
+        admin.setEnabled(true);
 
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(admin);

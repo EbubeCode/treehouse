@@ -22,6 +22,14 @@ public class Product {
 	@Column(columnDefinition="text")
 	private String description;
 	private int inStockNumber;
+
+
+	private String imageUrl;
+
+
+
+	@Transient
+	private MultipartFile productImage;
 	
 	@OneToMany(mappedBy = "product")
 	@JsonIgnore
@@ -102,4 +110,29 @@ public class Product {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public MultipartFile getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(MultipartFile productImage) {
+		this.productImage = productImage;
+	}
+
+	public List<ProductToCartItem> getProductToCartItemList() {
+		return productToCartItemList;
+	}
+
+	public void setProductToCartItemList(List<ProductToCartItem> productToCartItemList) {
+		this.productToCartItemList = productToCartItemList;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
 }

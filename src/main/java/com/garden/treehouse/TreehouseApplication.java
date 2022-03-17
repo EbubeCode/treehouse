@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class TreehouseApplication implements CommandLineRunner {
 
-	@Value("admin-password")
+	@Value("${admin-password}")
 	private String adminPassword;
 
 	@Autowired
