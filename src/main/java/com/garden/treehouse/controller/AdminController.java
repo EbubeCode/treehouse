@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
@@ -60,7 +61,7 @@ public class AdminController {
             e.printStackTrace();
         }
         productService.save(product);
-        return "redirect:admin";
+        return "redirect:/admin";
     }
 
     @GetMapping("/admin/productInfo")
@@ -122,24 +123,39 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String productList(Model model, Principal principal) {
+    public String productList(@RequestParam(name="category", required = false) String category, Model model, Principal principal) {
         System.out.println("Got here");
         if (!principal.getName().equals("admin"))
             return "badRequestPage";
-        List<Product> productList = productService.findAll();
+
+        List<Product> productList;
+        if (category != null)
+            productList = productService.findByCategory(category);
+        else
+            productList = productService.findAll();
+
         model.addAttribute("productList", productList);
         return "admin/productList";
 
     }
 
-    @PostMapping("/amin/remove")
+    @PostMapping("/admin/remove")
     public String remove(
-            @ModelAttribute("id") String id, Model model
-    ) {
-        productService.deleteById(Long.parseLong(id.substring(8)));
-        List<Product> productList = productService.findAll();
-        model.addAttribute("productList", productList);
+            @RequestParam("id") Long id,  Principal principal) {
+        if (!principal.getName().equals("admin"))
+            return "badRequestPage";
 
+        var product = productService.findById(id);
+
+        if (product != null && product.getImageUrl() != null) {
+            try {
+                Files.delete(Paths.get("src/main/resources/static" + product.getImageUrl()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        productService.deleteById(id);
         return "redirect:/admin";
     }
 }

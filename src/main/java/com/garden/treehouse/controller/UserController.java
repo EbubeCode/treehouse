@@ -185,7 +185,6 @@ public class UserController {
     @GetMapping("/myAccount")
     public String myAccount(Model model, Principal principal) {
 
-
         return "myAccount";
     }
 

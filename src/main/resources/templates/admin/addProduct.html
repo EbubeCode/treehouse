@@ -1,10 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Product</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head th:replace="common/header :: common-header"></head>
+
+<body>
+<div th:replace="common/header :: navbar"></div>
+
+<div class="pt-4">
+
+    <div class="block m-auto p-6 rounded-lg shadow-lg bg-white w-1/2">
+        <h1 class="text-center font-bold text-teal-500 text-3xl">Create Product</h1>
+        <form th:action="@{/admin/add}" th:method="POST" enctype="multipart/form-data" th:object="${product}">
+            <div class="form-group mb-6">
+                <label for="name" class="block text-lg text-gray-500">Name</label>
+                <input type="text" id="name" class="form-control block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                       th:field="*{name}" placeholder="Product Name">
+            </div>
+            <div class="flex justify-left">
+                <div class="mb-6 xl:w-96">
+                    <label for="category" class="block text-lg text-gray-500">Category</label>
+                    <select th:field="*{category}" id="category" class=" block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
+                        <option th:selected="(*{category}=='Seeds')" selected value="Seeds">Seeds</option>
+                        <option th:selected="(*{category}=='Fruits')" value="Fruits">Fruits</option>
+                        <option th:selected="(*{category}=='Plants')" value="Plants">Plants</option>
+                        <option th:selected="(*{category}=='Tools')" value="Tools">Tools</option>
+                        <option th:selected="(*{category}=='Vegetables')" value="Vegetables">Vegetables</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mb-6">
+                <label for="shipWeight" class="block text-lg text-gray-500">Shiping Weight</label>
+                <input type="number" id="shipWeight"
+                       class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                       th:field="*{shippingWeight}" placeholder="Shipping Weight in Kg">
+            </div>
+
+            <div class="form-group mb-6">
+                <label for="inStock" class="block text-lg text-gray-500">In-stock</label>
+                <input type="number" step="any" id="inStock"
+                       class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                       th:field="*{inStockNumber}" placeholder="Number of in-stock product">
+            </div>
+
+            <div class="form-group mb-6">
+                <label for="ourPrice" class="block text-lg text-gray-500">Our Price</label>
+                <input type="number" step="any" id="ourPrice"
+                       class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                       th:field="*{ourPrice}"
+                       placeholder="Our Price in pound sterling">
+            </div>
+
+            <div class="form-group mb-6">
+                <label for="listPrice" class="block text-lg text-gray-500">List Price</label>
+                <input type="number" step="any" id="listPrice"
+                       class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                       th:field="*{listPrice}" placeholder="List Price in Pound Sterling">
+            </div>
+            <div class="form-group mb-6">
+                <label for="description" class="block text-lg text-gray-500">Product description</label>
+      <textarea id="description"
+              class="
+                    form-control
+                    block
+                    w-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-gray-700
+                    bg-white bg-clip-padding
+                    border border-solid border-gray-300
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              rows="3" placeholder="Description" th:field="*{description}"
+      ></textarea>
+            </div>
+            <div class="form-group form-check  mb-6">
+                <input type="checkbox"
+                       class="form-check-input appearance-none h-4 w-4 border border-gray-300
+                        rounded-sm bg-white checked:bg-teal-600 checked:border-blue-600 focus:outline-none
+                         transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2
+                         cursor-pointer" th:field="*{active}"
+                       id="exampleCheck87" checked>
+                <label class="form-check-label inline-block text-gray-800" for="exampleCheck87">
+                    Active</label>
+            </div>
+            <div class="mb-3 text-gray-700 ">
+
+                <label for="image" class="block text-xl">Product Image: </label>
+                <input id="image" th:field="*{productImage}" type="file" name="image" accept="image/jpg, image/jpeg, image/png"/>
+
+            </div>
+            <button type="submit"
+                    class="
+                          w-fit
+                          px-6
+                          py-2.5
+                          bg-teal-500
+                          text-white
+                          font-medium
+                          text-xs
+                          leading-tight
+                          uppercase
+                          rounded
+                          shadow-md
+                          hover:bg-teal-700 hover:shadow-lg
+                          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+                          active:bg-blue-800 active:shadow-lg
+                          transition
+                          duration-150
+                          ease-in-out">Create Product
+            </button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="common/header :: body-bottom-scripts"></div>
 </body>
 </html>

@@ -46,7 +46,6 @@ public class User {
     private List<Order> orderList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();
 
     public Long getId() {

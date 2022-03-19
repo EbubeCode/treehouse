@@ -46,8 +46,6 @@ public class UserService {
     }
 
 
-
-
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
@@ -89,14 +87,8 @@ public class UserService {
         var opAdmin = userRepository.findByEmail("admin");
 
         System.out.println(password);
-        if (opAdmin.isPresent()) {
-            var admin = opAdmin.get();
-            admin.setPassword(passwordEncoder.encode(password));
-            userRepository.save(admin);
-            return "Admin account already exists --> password has been updated";
-        }
 
-        var admin = new User();
+        var admin = opAdmin.orElseGet(User::new);
 
         admin.setPassword(passwordEncoder.encode(password));
 
@@ -115,7 +107,7 @@ public class UserService {
         for (UserRole ur : userRoles)
             roleRepository.save(ur.getRole());
 
-        admin.getUserRoles().addAll(userRoles);
+        admin.setUserRoles(userRoles);
 
         admin.setEmail("admin");
         admin.setEnabled(true);

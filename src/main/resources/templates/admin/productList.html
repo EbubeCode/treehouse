@@ -3,65 +3,93 @@
 
 <head th:replace="common/header :: common-header"></head>
 
-<body>
+<body class="overflow-x-hidden">
 <div th:replace="common/header :: navbar"></div>
 
-<h2>Product List</h2>
+<div class="flex justify-between p-4">
+    <h2 class="text-3xl">Product List</h2>
+    <div class="w-fit flex">
+        <div class="content-around flex mr-4">
+            <div class="relative inline-block m-auto lg:w-fit lg:m-2 text-left pb-1">
+                <div>
+                    <button type="button"
+                            class="menu-button inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-1 bg-teal-500 text-lg font-medium text-white
+                                 hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-100"
+                            id="admin-drop" aria-expanded="true" aria-haspopup="true">
+                        Categories
+                        <!-- Heroicon name: solid/chevron-down -->
+                        <svg class="-mr-1 ml-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                             fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
 
-<div class="flex flex-col">
+                <div class="drop-down origin-top-right hidden absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none
+                        ease-in ease-out"
+                     role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                     id="admin-drop-down">
+                    <div class="py-1" role="none">
+                        <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                        <a th:href="@{/admin(category='Plants')}"
+                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-teal-100" role="menuitem"
+                           tabindex="-1"
+                           id="menu-item-0">Plants</a>
+                        <a th:href="@{/admin(category='Fruits')}"
+                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-teal-100" role="menuitem"
+                           tabindex="-1"
+                           id="menu-item-1">Fruits</a>
+                        <a th:href="@{/admin(category='Seeds')}"
+                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-teal-100" role="menuitem"
+                           tabindex="-1">Seeds</a>
+                        <a th:href="@{/admin(category='Tools')}"
+                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-teal-100" role="menuitem"
+                           tabindex="-1">Tools</a>
+                        <a th:href="@{/admin(category='Vegetables')}"
+                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-teal-100" role="menuitem"
+                           tabindex="-1">Vegetables</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a th:href="@{/admin/add}" class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br
+            focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800 font-medium
+             rounded-lg text-sm px-5 pt-4 text-center mr-2 mb-2 cursor-pointer">
+            Add New Product
+        </a>
+    </div>
+
+</div>
+
+<div class="flex flex-col mt-4">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
             <div class="overflow-hidden">
                 <table class="min-w-full">
                     <thead class="bg-white border-b">
                     <tr>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            #
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            First
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            Last
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            Handle
-                        </th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">#</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Name</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Category</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Our Price(£)</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">List Price(£)</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Shipping weight(kg)</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">In-stock</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Active</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="bg-gray-100 border-b">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            Mark
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            Otto
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            @mdo
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            Jacob
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            Thornton
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            @fat
-                        </td>
-                    </tr>
-                    <tr class="bg-gray-100 border-b">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
-                        <td colspan="2" class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
-                            Larry the Bird
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            @twitter
-                        </td>
+                    <tr data-th-each="prod: ${productList}" th:class="${prodStat.odd}? 'bg-gray-100 border-b' : 'bg-white border-b'">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prodStat.count}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.name}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.category}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.ourPrice}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.listPrice}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.shippingWeight}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.inStockNumber}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.active}"></span></a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -70,9 +98,8 @@
     </div>
 </div>
 
-<div th:replace="common/header :: footer"/>
 
-<div th:replace="common/header :: body-bottom-scripts"/>
+<div th:replace="common/header :: body-bottom-scripts"></div>
 </body>
 
 </html>

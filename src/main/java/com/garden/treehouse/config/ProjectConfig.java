@@ -61,7 +61,7 @@ public class ProjectConfig {
                 .and()
 
                 .formLogin().failureUrl("/login?error=true")
-                .defaultSuccessUrl("/myProfile")
+                .defaultSuccessUrl("/myAccount", false)
                 .loginPage("/login").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
