@@ -1,14 +1,9 @@
 package com.garden.treehouse.controller;
 
 import com.garden.treehouse.model.*;
+import com.garden.treehouse.repos.ProductRepository;
 import com.garden.treehouse.services.*;
 import com.garden.treehouse.utility.USConstants;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,31 +22,49 @@ public class HomeController {
     private final ProductService productService;
     private final UserPaymentService userPaymentService;
     private final UserShippingService userShippingService;
-    private final PasswordEncoder passwordEncoder;
+    private final ProductRepository productRepository;
     private final CartItemService cartItemService;
     private final OrderService orderService;
 
     public HomeController(UserService userService, ProductService productService,
                           UserPaymentService userPaymentService,
                           UserShippingService userShippingService,
-                          PasswordEncoder passwordEncoder, CartItemService cartItemService,
+                          ProductRepository productRepository, CartItemService cartItemService,
                           OrderService orderService) {
         this.userService = userService;
         this.productService = productService;
         this.userPaymentService = userPaymentService;
         this.userShippingService = userShippingService;
-        this.passwordEncoder = passwordEncoder;
+        this.productRepository = productRepository;
         this.cartItemService = cartItemService;
         this.orderService = orderService;
     }
 
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
+        var products = productRepository.findTop8ByOrderByIdDesc().orElse(List.of());
+        model.addAttribute("products", products);
+
+        var plants = productRepository.findTop8ByCategoryOrderByIdDesc("Plants").orElse(List.of());
+        model.addAttribute("plants", plants);
+
+        var fruits = productRepository.findTop8ByCategoryOrderByIdDesc("Fruits").orElse(List.of());
+        model.addAttribute("fruits", fruits);
+
+        var veges = productRepository.findTop8ByCategoryOrderByIdDesc("Vegetables").orElse(List.of());
+        model.addAttribute("veges", veges);
+
+        var tools = productRepository.findTop8ByCategoryOrderByIdDesc("Tools").orElse(List.of());
+        model.addAttribute("tools", tools);
+
+        var seeds = productRepository.findTop8ByCategoryOrderByIdDesc("Seeds").orElse(List.of());
+        model.addAttribute("seeds", seeds);
+
         return "index";
     }
 
 
-    @RequestMapping("/productRack")
+    @GetMapping("/productRack")
     public String bookshelf(Model model, Principal principal) {
 
         if (principal != null) {
@@ -62,7 +75,6 @@ public class HomeController {
 
         List<Product> products = productService.findAll();
         model.addAttribute("productList", products);
-        model.addAttribute("activeAll", true);
 
         return "productRack";
     }

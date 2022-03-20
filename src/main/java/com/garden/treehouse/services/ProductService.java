@@ -62,7 +62,7 @@ public class ProductService{
 
 	public String save(Product product) {
 		productRepository.save(product);
-		return "Book saved successfully";
+		return "Produce saved successfully";
 	}
 
 	public void deleteById(long id) {

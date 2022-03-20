@@ -46,12 +46,12 @@ public class AdminController {
             String imageName;
 
             if (productImage.getOriginalFilename() == null)
-                imageName = product.getName()+ product.getId() + ".png";
+                imageName = product.getName() + product.getId() + ".png";
             else
                 imageName = StringUtils.cleanPath(productImage.getOriginalFilename());
 
 
-            String imageUrl = "/product-image/"+imageName;
+            String imageUrl = "/product-image/" + imageName;
             BufferedOutputStream stream = new BufferedOutputStream(
                     new FileOutputStream("src/main/resources/static" + imageUrl));
             stream.write(bytes);
@@ -82,48 +82,64 @@ public class AdminController {
             return "badRequestPage";
 
         Product product = productService.findById(id);
-        model.addAttribute("book", product);
+        model.addAttribute("product", product);
 
         return "admin/updateProduct";
     }
 
 
     @PostMapping("/admin/updateProduct")
-    public String updateProductPost(@ModelAttribute("product") Product product, Principal principal) {
+    public String updateProductPost(@RequestParam("id") Long id,
+                                    @ModelAttribute("product") Product product, Principal principal) {
         if (!principal.getName().equals("admin"))
             return "badRequestPage";
 
         MultipartFile productImage = product.getProductImage();
+        var currentProduct = productService.findById(id);
 
-        if(!productImage.isEmpty()) {
+        if (!productImage.isEmpty()) {
             try {
                 byte[] bytes = productImage.getBytes();
                 String imageName;
 
                 if (productImage.getOriginalFilename() == null)
-                    imageName = product.getName()+ product.getId() + ".png";
+                    imageName = product.getName() + product.getId() + ".png";
                 else
                     imageName = StringUtils.cleanPath(productImage.getOriginalFilename());
 
 
-                String imageUrl = "/product-image/"+imageName;
-                Files.delete(Paths.get("src/main/resources/static" + product.getImageUrl()));
+                String imageUrl = "/product-image/" + imageName;
+                if (currentProduct.getImageUrl() != null)
+                    Files.delete(Paths.get("src/main/resources/static" + currentProduct.getImageUrl()));
+
+                currentProduct.setImageUrl(imageUrl);
 
                 BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream("src/main/resources/static"+ imageUrl));
+                        new FileOutputStream("src/main/resources/static" + imageUrl));
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        productService.save(product);
+        convertProduct(currentProduct, product);
+        productService.save(currentProduct);
 
-        return "redirect:admin/productInfo?id="+product.getId();
+        return "redirect:/admin/productInfo?id=" + currentProduct.getId();
+    }
+
+    private void convertProduct(Product oldProduct, Product newProduct) {
+        oldProduct.setName(newProduct.getName());
+        oldProduct.setInStockNumber(newProduct.getInStockNumber());
+        oldProduct.setOurPrice(newProduct.getOurPrice());
+        oldProduct.setListPrice(newProduct.getListPrice());
+        oldProduct.setShippingWeight(newProduct.getShippingWeight());
+        oldProduct.setDescription(newProduct.getDescription());
+        oldProduct.setCategory(newProduct.getCategory());
     }
 
     @GetMapping("/admin")
-    public String productList(@RequestParam(name="category", required = false) String category, Model model, Principal principal) {
+    public String productList(@RequestParam(name = "category", required = false) String category, Model model, Principal principal) {
         System.out.println("Got here");
         if (!principal.getName().equals("admin"))
             return "badRequestPage";
@@ -141,7 +157,7 @@ public class AdminController {
 
     @PostMapping("/admin/remove")
     public String remove(
-            @RequestParam("id") Long id,  Principal principal) {
+            @RequestParam("id") Long id, Principal principal) {
         if (!principal.getName().equals("admin"))
             return "badRequestPage";
 

@@ -10,12 +10,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.build.tailwind.css}">
     <link rel="stylesheet" th:href="@{/css/style.dev.tailwind.css}">
-    <!--    My css-->
-    <link th:href="@{/css/style.css}" rel="stylesheet">
 
-    <!--    Owl Carousel-->
-    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
-    <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
 
     <!--    &lt;!&ndash;    font awesome cdn&ndash;&gt;-->
     <script src="https://kit.fontawesome.com/beed960efc.js" crossorigin="anonymous"></script>
@@ -53,10 +48,10 @@
             <div class="lg:flex m-auto lg:m-0">
 
 
-                <form class="input-group relative inline items-stretch flex my-2">
+                <form class="input-group relative inline items-stretch flex my-2" th:action="@{/searchProduct}" th:method="post">
                     <input type="search" class=" inline-flex form-control relative flex-auto min-w-0 block px-1   text-base font-normal text-gray-700
                      bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white
-                     focus:border-teal-500 focus:outline-none inline-flex " placeholder="Search Products"
+                     focus:border-teal-500 focus:outline-none inline-flex" name="keyword" placeholder="Search Products"
                            aria-label="Search"
                            aria-describedby="button-addon3">
                     <button class="btn inline-block px-3 py-1 border-2 border-gray-300 text-white font-medium text-xs leading-tight uppercase
@@ -271,7 +266,6 @@
 
 <div th:fragment="body-bottom-scripts">
     <script th:src="@{/js/jquery.min.js}"></script>
-    <script th:src="@{/js/owl.carousel.min.js}"></script>
     <script th:src="@{/js/script.js}"></script>
 </div>
 </body>

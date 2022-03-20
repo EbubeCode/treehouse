@@ -7,6 +7,7 @@ import com.garden.treehouse.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,11 +36,7 @@ public class SearchController {
 			model.addAttribute("user", user);
 		}
 		
-		String classActiveCategory = "active"+category;
-		classActiveCategory = classActiveCategory.replaceAll("\\s+", "");
-		classActiveCategory = classActiveCategory.replaceAll("&", "");
-		model.addAttribute(classActiveCategory, true);
-		
+
 		List<Product> products = productService.findByCategory(category);
 		
 		if (products.isEmpty()) {
@@ -47,12 +44,12 @@ public class SearchController {
 			return "productRack";
 		}
 		
-		model.addAttribute("bookList", products);
+		model.addAttribute("products", products);
 		
 		return "productRack";
 	}
 	
-	@RequestMapping("/searchProduct")
+	@PostMapping("/searchProduct")
 	public String searchBook(
 			@ModelAttribute("keyword") String keyword,
 			Principal principal, Model model
@@ -66,11 +63,12 @@ public class SearchController {
 		List<Product> products = productService.blurrySearch(keyword);
 		
 		if (products.isEmpty()) {
+			System.out.println("products is empty " + products);
 			model.addAttribute("emptyList", true);
 			return "productRack";
 		}
 		
-		model.addAttribute("bookList", products);
+		model.addAttribute("products", products);
 		
 		return "productRack";
 	}
