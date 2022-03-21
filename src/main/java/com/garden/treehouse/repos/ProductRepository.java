@@ -11,8 +11,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     Optional<List<Product>> findByCategory(String category);
 
-    Optional<List<Product>> findTop8ByOrderByIdDesc();
+    Optional<List<Product>> findTop4ByOrderByIdDesc();
     Optional<List<Product>> findProductsByNameContaining(String name);
-    Optional<List<Product>> findTop8ByCategoryOrderByIdDesc(String name);
+    Optional<List<Product>> findTop4ByCategoryOrderByIdDesc(String name);
 
 }

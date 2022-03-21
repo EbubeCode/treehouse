@@ -42,22 +42,22 @@ public class HomeController {
 
     @RequestMapping("/")
     public String index(Model model) {
-        var products = productRepository.findTop8ByOrderByIdDesc().orElse(List.of());
+        var products = productRepository.findTop4ByOrderByIdDesc().orElse(List.of());
         model.addAttribute("products", products);
 
-        var plants = productRepository.findTop8ByCategoryOrderByIdDesc("Plants").orElse(List.of());
+        var plants = productRepository.findTop4ByCategoryOrderByIdDesc("Plants").orElse(List.of());
         model.addAttribute("plants", plants);
 
-        var fruits = productRepository.findTop8ByCategoryOrderByIdDesc("Fruits").orElse(List.of());
+        var fruits = productRepository.findTop4ByCategoryOrderByIdDesc("Fruits").orElse(List.of());
         model.addAttribute("fruits", fruits);
 
-        var veges = productRepository.findTop8ByCategoryOrderByIdDesc("Vegetables").orElse(List.of());
+        var veges = productRepository.findTop4ByCategoryOrderByIdDesc("Vegetables").orElse(List.of());
         model.addAttribute("veges", veges);
 
-        var tools = productRepository.findTop8ByCategoryOrderByIdDesc("Tools").orElse(List.of());
+        var tools = productRepository.findTop4ByCategoryOrderByIdDesc("Tools").orElse(List.of());
         model.addAttribute("tools", tools);
 
-        var seeds = productRepository.findTop8ByCategoryOrderByIdDesc("Seeds").orElse(List.of());
+        var seeds = productRepository.findTop4ByCategoryOrderByIdDesc("Seeds").orElse(List.of());
         model.addAttribute("seeds", seeds);
 
         return "index";
@@ -79,9 +79,9 @@ public class HomeController {
         return "productRack";
     }
 
-    @RequestMapping("/productDetail")
-    public String bookDetail(
-            @PathParam("id") Long id, Model model, Principal principal
+    @GetMapping("/productDetail")
+    public String productDetail(
+            @RequestParam("id") Long id, Model model, Principal principal
     ) {
         if (principal != null) {
             String username = principal.getName();
