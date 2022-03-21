@@ -28,9 +28,6 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
             fallback: false
 
-  servlet:
-    multipart:
-      max-file-size: 10485760
 
 base_url: ${baseUrl}
 admin-password: ${adPassword}
