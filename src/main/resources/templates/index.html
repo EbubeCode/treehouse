@@ -25,22 +25,22 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">New Products</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">New Products</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="bg-teal-100 rounded-lg shadow-md shadow-teal-300"
              data-th-each="prod: ${products}">
-            <a href="#" class="border-solid border-2 border-white ">
+            <a th:href="@{/productDetail(id=${prod.id})}" class="border-solid border-2 border-white ">
                 <img class="rounded-lg h-48 lg:h-72 object-cover w-full" th:src="@{${prod.imageUrl}}" alt="product image" />
             </a>
             <div class="px-5 pb-5">
-                <a href="#">
+                <a th:href="@{/productDetail(id=${prod.id})}">
                     <h5 class="text-xl font-semibold tracking-tight text-gray-900" th:text="${prod.name}"></h5>
                 </a>
 
                 <div class="flex justify-between items-center">
                     <span class="text-3xl font-bold text-gray-900" th:text="('£' + ${prod.ourPrice})"></span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-teal-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Shop Now</a>
+                    <a th:href="@{/productDetail(id=${prod.id})}" class="text-white bg-blue-700 hover:bg-teal-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Shop Now</a>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">Plants</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">Plants</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="max-w-sm bg-teal-100 rounded-lg shadow-md shadow-teal-300"
@@ -79,7 +79,7 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">Fruits</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">Fruits</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="max-w-sm bg-teal-100 rounded-lg shadow-md shadow-teal-300"
@@ -106,7 +106,7 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">Seeds</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">Seeds</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="max-w-sm bg-teal-100 rounded-lg shadow-md shadow-teal-300"
@@ -133,7 +133,7 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">Vegetables</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">Vegetables</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="max-w-sm bg-teal-100 rounded-lg shadow-md shadow-teal-300"
@@ -160,7 +160,7 @@
 
 <!--</div>-->
 <div class="pl-2 mb-10">
-    <h2 class="pt-4 pl-5 text-xl text-teal-500 font-mono font-bold">Tools</h2>
+    <h2 class="pt-4 pl-5 text-2xl text-teal-700 font-mono font-bold">Tools</h2>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="max-w-sm bg-teal-100 rounded-lg shadow-md shadow-teal-300"
