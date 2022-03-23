@@ -7,31 +7,61 @@
 <div th:replace="common/header :: navbar"></div>
 
 <div class="pt-3 px-10" th:object="${product}">
-	<div class="grid md:grid-cols-2 shadow-lg shadow-teal-400 p-4 rounded-lg border-4 border-solid gap-3">
-		<div class=" bg-white rounded-lg border border-teal-200 shadow-md border-solid border-4 h-fit"    >
-			<img class="object-cover rounded w-full  lg:h-96"  th:src="@{*{imageUrl}}" th:alt="(*{name} + ' image')"/>
-		</div>
+    <div class="grid md:grid-cols-2 shadow-lg shadow-teal-400 p-4 rounded-lg border-4 border-solid gap-3">
+        <div class=" bg-white rounded-lg border border-teal-200 shadow-md border-solid border-4 h-fit">
+            <img class="object-cover rounded w-full  lg:h-96" th:src="@{*{imageUrl}}" th:alt="(*{name} + ' image')"/>
+        </div>
 
-		<div class="grid-rows-2 justify-between h-full">
-			<div>
-				<h2 class="text-3xl text-center text-teal-700 font-semibold mb-1 ml-3" th:text="*{name}"></h2>
-				<div>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('Category: ' + *{category})"></h2>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('Our Price: £' + *{ourPrice})"></h2>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('List Price: £' + *{listPrice})"></h2>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('In Stock: ' + *{inStockNumber} + ' pieces')"></h2>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('Shipping weight: ' + *{shippingWeight} + 'Kg')"></h2>
-					<h2 class="text-xl  mb-1 ml-3" th:text="('Active: ' + *{active})"></h2>
-				</div>
+        <div class="grid-rows-2 justify-between h-full">
+            <div>
+                <h2 class="text-3xl text-center text-teal-700 font-semibold mb-1 ml-3" th:text="*{name}"></h2>
+                <div class="grid grid-cols-2 pt-4">
+                    <div>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
+                            th:text="('Category: ' + *{category})"></h2>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
+                            th:text="('Our Price: £' + *{ourPrice})"></h2>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
+                            th:text="('List Price: £' + *{listPrice})"></h2>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
+                            th:text="('In Stock: ' + *{inStockNumber} + ' pieces')"></h2>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
+                            th:text="('Shipping weight: ' + *{shippingWeight} + 'Kg')"></h2>
+                        <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold" th:text="('Active: ' + *{active})"></h2>
+                    </div>
+                    <div class="text-right">
+                        <h1 class="text-sm p-3 pb-1">Quantity</h1>
+                        <div th:replace="common/quantity-control :: quntity-control(1, *{id})"></div>
 
-				<p class="text-sm  mb-1 ml-3" id="description" th:text="*{description}"></p>
-			</div>
+                        <div class="flex  justify-end  grid row gap-3">
+                            <span class="text-lg font-semibold text-gray-900" th:text="('£' + *{ourPrice})"></span>
+                            <button class="text-white bg-blue-700 hover:bg-teal-500 focus:ring-4 focus:ring-blue-300 font-medium
+							rounded-lg text-sm px-5 py-2.5 text-center" id="addToCart">Add To Cart</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="text-sm text-center mt-5">
+                 <h2 class="lg:text-lg text-sm mb-1 ml-3 font-semibold">Description</h2>
+                <p
+                        th:text="*{description}">
+                </p>
+            </div>
+
+        </div>
 
 
-		</div>
-	</div>
+    </div>
 </div>
-
+</div>
+<script th:inline="javascript">
+    let productId = "[[${product.id}]]";
+    let csrfHeaderName = /*[[${_csrf.headerName}]]*/ "csrfHeader";
+    let csrfValue = /*[[${_csrf.token}]]*/ "csrftoken";
+    let quantityId = "#quantity"+productId
+</script>
 <div th:replace="common/header :: body-bottom-scripts"></div>
+<script th:src="@{/js/quantity-control.js}"></script>
+<script th:src="@{/js/addToCart.js}"></script>
 </body>
 </html>

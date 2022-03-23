@@ -1,7 +1,6 @@
 package com.garden.treehouse.controller;
 
 import com.garden.treehouse.model.CartItem;
-import com.garden.treehouse.model.Product;
 import com.garden.treehouse.model.ShoppingCart;
 import com.garden.treehouse.model.User;
 import com.garden.treehouse.services.CartItemService;
@@ -10,16 +9,13 @@ import com.garden.treehouse.services.ShoppingCartService;
 import com.garden.treehouse.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
 
 @Controller
-@RequestMapping("/shoppingCart")
 public class ShoppingCartController {
 	private final UserService userService;
 	private final CartItemService cartItemService;
@@ -33,7 +29,7 @@ public class ShoppingCartController {
 		this.shoppingCartService = shoppingCartService;
 	}
 
-	@RequestMapping("/cart")
+	@GetMapping("/cart")
 	public String shoppingCart(Model model, Principal principal) {
 		User user = userService.findByEmail(principal.getName());
 		ShoppingCart shoppingCart = user.getShoppingCart();
@@ -48,24 +44,25 @@ public class ShoppingCartController {
 		return "shoppingCart";
 	}
 	
-	@RequestMapping("/addItem")
-	public String addItem(
-			@ModelAttribute("product") Product product,
-			@ModelAttribute("qty") String qty,
-			Model model, Principal principal
+	@PostMapping("/addItem/{pid}/{qty}")
+	@ResponseBody
+	public String addItem(@PathVariable Long pid,
+			@PathVariable int qty,
+			Principal principal
 			) {
-		User user = userService.findByEmail(principal.getName());
-		product = productService.findById(product.getId());
+		if (principal == null)
+			return "You must login to add to cart.";
+		var user = userService.findByEmail(principal.getName());
+		System.out.println(user.getEmail());
+		var product = productService.findById(pid);
 		
-		if (Integer.parseInt(qty) > product.getInStockNumber()) {
-			model.addAttribute("notEnoughStock", true);
-			return "forward:/productDetail?id="+product.getId();
+		if (qty > product.getInStockNumber()) {
+			return "Not enough products in stock";
 		}
 		
-		CartItem cartItem = cartItemService.addBookToCartItem(product, user, Integer.parseInt(qty));
-		model.addAttribute("addProductSucces", true);
-		
-		return "forward:/productDetail?id="+product.getId();
+		CartItem cartItem = cartItemService.addProductToCartItem(product, user, qty);
+
+		return "product successfully added to shopping cart";
 	}
 	
 	@RequestMapping("/updateCartItem")

@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
+<div th:fragment="quntity-control(qtyValue, productId)">
+    <nav>
+        <ul class="inline-flex -space-x-px">
+            <li>
+                <a href="#" class="pb-1 px-3 text-gray-500 bg-white border border-gray-300
+                hover:bg-gray-100 hover:text-gray-700 minusButton"
+                   th:pid="${productId}">-</a>
+            </li>
+            <li>
+                <input th:value="${qtyValue}" th:id="'quantity'+${productId}" class="border  w-6 border-gray-300 text-center mx-0.5">
+            </li>
+            <li>
+                <a href="#" class="pb-1 px-3 text-gray-500 bg-white border border-gray-300
+                hover:bg-gray-100 hover:text-gray-700 plusButton"
+                th:pid="${productId}">+</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 </body>
 </html>
