@@ -38,7 +38,7 @@ public class ShoppingCartController {
 		
 		shoppingCartService.updateShoppingCart(shoppingCart);
 		
-		model.addAttribute("cartItemList", cartItemList);
+		model.addAttribute("cartItems", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
 		
 		return "shoppingCart";
@@ -60,28 +60,31 @@ public class ShoppingCartController {
 			return "Not enough products in stock";
 		}
 		
-		CartItem cartItem = cartItemService.addProductToCartItem(product, user, qty);
+		var response = cartItemService.addProductToCartItem(product, user, qty);
 
-		return "product successfully added to shopping cart";
+		return response;
 	}
 	
-	@RequestMapping("/updateCartItem")
+	@PostMapping("/updateCartItem/{id}/{qty}")
+	@ResponseBody
 	public String updateShoppingCart(
-			@ModelAttribute("id") Long cartItemId,
-			@ModelAttribute("qty") int qty
+			@PathVariable Long id,
+			@PathVariable int qty
 			) {
-		CartItem cartItem = cartItemService.findById(cartItemId);
+		CartItem cartItem = cartItemService.findById(id);
+
 		cartItem.setQty(qty);
 		cartItemService.updateCartItem(cartItem);
 		
-		return "forward:/shoppingCart/cart";
+		return cartItem.getQty() + "";
 	}
 	
-	@RequestMapping("/removeItem")
+	@DeleteMapping("/removeCartItem")
+	@ResponseBody
 	public String removeItem(@RequestParam("id") Long id) {
 		cartItemService.removeCartItem(cartItemService.findById(id));
 		
-		return "forward:/shoppingCart/cart";
+		return id + "";
 	}
 
 }

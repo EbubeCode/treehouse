@@ -95,7 +95,7 @@
             </div>
 
             <div class="form-group mb-6">
-                <label for="ourPrice" class="block text-lg text-gray-500">Our Price</label>
+                <label for="ourPrice" class="block text-lg text-gray-500">Price</label>
                 <input type="number" step="any" id="ourPrice"
                        class="form-control block
                             w-full
@@ -111,29 +111,10 @@
                             ease-in-out
                             m-0
                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                       th:field="*{ourPrice}"
+                       th:field="*{price}"
                        placeholder="Our Price in pound sterling">
             </div>
 
-            <div class="form-group mb-6">
-                <label for="listPrice" class="block text-lg text-gray-500">List Price</label>
-                <input type="number" step="any" id="listPrice"
-                       class="form-control block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                       th:field="*{listPrice}" placeholder="List Price in Pound Sterling">
-            </div>
             <div class="form-group mb-6">
                 <label for="description" class="block text-lg text-gray-500">Product description</label>
       <textarea id="description"

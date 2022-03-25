@@ -26,7 +26,7 @@ public class CartItemService {
     }
 
     public CartItem updateCartItem(CartItem cartItem) {
-        BigDecimal bigDecimal = new BigDecimal(cartItem.getProduct().getOurPrice()).multiply(new BigDecimal(cartItem.getQty()));
+        BigDecimal bigDecimal = new BigDecimal(cartItem.getProduct().getPrice()).multiply(new BigDecimal(cartItem.getQty()));
 
         bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
         cartItem.setSubtotal(bigDecimal);
@@ -36,15 +36,19 @@ public class CartItemService {
         return cartItem;
     }
 
-    public CartItem addProductToCartItem(Product product, User user, int qty) {
+    public String addProductToCartItem(Product product, User user, int qty) {
         List<CartItem> cartItemList = findByShoppingCart(user.getShoppingCart());
 
         for (CartItem cartItem : cartItemList) {
-            if (product.getId() == cartItem.getProduct().getId()) {
-                cartItem.setQty(cartItem.getQty() + qty);
-                cartItem.setSubtotal(new BigDecimal(product.getOurPrice()).multiply(new BigDecimal(qty)));
+            if (product.getId().equals(cartItem.getProduct().getId())) {
+                var newQuantity = cartItem.getQty() + qty;
+                if (newQuantity > 10)
+                    return "You cannot add more than ten quantities to the cart. You already have "
+                    + (newQuantity - qty) + " quantities of this item added";
+                cartItem.setQty(newQuantity);
+                cartItem.setSubtotal(BigDecimal.valueOf(product.getPrice()).multiply(new BigDecimal(qty)));
                 cartItemRepository.save(cartItem);
-                return cartItem;
+                return "product successfully added to shopping cart";
             }
         }
 
@@ -53,7 +57,7 @@ public class CartItemService {
         cartItem.setProduct(product);
 
         cartItem.setQty(qty);
-        cartItem.setSubtotal(BigDecimal.valueOf(product.getOurPrice()).multiply(new BigDecimal(qty)));
+        cartItem.setSubtotal(BigDecimal.valueOf(product.getPrice()).multiply(new BigDecimal(qty)));
         cartItem = cartItemRepository.save(cartItem);
 
         ProductToCartItem productToCartItem = new ProductToCartItem();
@@ -61,7 +65,7 @@ public class CartItemService {
         productToCartItem.setCartItem(cartItem);
         productToCartItemRepository.save(productToCartItem);
 
-        return cartItem;
+        return "product successfully added to shopping cart";
     }
 
     public CartItem findById(Long id) {

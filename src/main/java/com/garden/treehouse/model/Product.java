@@ -15,8 +15,7 @@ public class Product {
 	private String name;
 	private String category;
 	private double shippingWeight;
-	private double listPrice;
-	private double ourPrice;
+	private double price;
 	private boolean active=true;
 	
 	@Column(columnDefinition="text")
@@ -61,20 +60,13 @@ public class Product {
 		this.shippingWeight = shippingWeight;
 	}
 
-	public double getListPrice() {
-		return listPrice;
+
+	public double getPrice() {
+		return price;
 	}
 
-	public void setListPrice(double listPrice) {
-		this.listPrice = listPrice;
-	}
-
-	public double getOurPrice() {
-		return ourPrice;
-	}
-
-	public void setOurPrice(double ourPrice) {
-		this.ourPrice = ourPrice;
+	public void setPrice(double ourPrice) {
+		this.price = ourPrice;
 	}
 
 	public boolean isActive() {

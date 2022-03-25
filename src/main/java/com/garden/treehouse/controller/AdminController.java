@@ -131,8 +131,7 @@ public class AdminController {
     private void convertProduct(Product oldProduct, Product newProduct) {
         oldProduct.setName(newProduct.getName());
         oldProduct.setInStockNumber(newProduct.getInStockNumber());
-        oldProduct.setOurPrice(newProduct.getOurPrice());
-        oldProduct.setListPrice(newProduct.getListPrice());
+        oldProduct.setPrice(newProduct.getPrice());
         oldProduct.setShippingWeight(newProduct.getShippingWeight());
         oldProduct.setDescription(newProduct.getDescription());
         oldProduct.setCategory(newProduct.getCategory());

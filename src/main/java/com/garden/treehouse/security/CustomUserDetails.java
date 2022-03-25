@@ -12,8 +12,16 @@ import java.util.Set;
 public class CustomUserDetails implements UserDetails {
     private final User user;
 
+
+    private final String username;
+
     public CustomUserDetails(User user) {
         this.user = user;
+        username = user.getFirstName();
+    }
+
+    public String getUserName() {
+        return username;
     }
 
     @Override

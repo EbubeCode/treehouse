@@ -1,125 +1,88 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
-<head th:replace="common/header :: common-header" />
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-header"></head>
 
 <body>
-	<div th:replace="common/header :: navbar" />
+<div th:replace="common/header :: navbar"></div>
 
-	<div class="container">
-		<div class="row" style="margin-bottom: -100px;">
-			<div class="col-xs-8">
-				<h2 class="section-headline">
-					<h2 class="section-headline">
-						<span
-							th:text="${user}? ${#strings.toUpperCase(user.username)} : 'All Books'"></span>
-					</h2>
-				</h2>
-			</div>
-			<div class="col-xs-4">
-				<img src="/image/logo.png" class="img-responsive" />
-			</div>
-		</div>
-		<hr style="position: absolute; width:85%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;" />
-		<img class="img-responsive" src="/image/wood.png"
-			style="margin-top: -75px;" />
+<h1 class="text-xl text-teal-700 font-bold font-mono text-center py-4"><span th:text="${shoppingCart.user.firstName}"></span>'S Shopping Cart</h1>
 
-		<div class="row" style="margin-top: 10px;">
-			<div class="col-xs-12">
-				<div class="row">
-					<div class="col-xs-6 text-left">
-						<a class="btn btn-warning" th:href="@{/bookshelf}">Continue
-							Shopping</a>
-					</div>
-					<div class="col-xs-6 text-right">
-						<a class="btn btn-primary"
-							th:href="@{/checkout(id=${shoppingCart.id})}">Check Out</a>
-					</div>
-					<br />
-					<div th:if="${notEnoughStock}" class="alert alert-warning">
-						Oops, some of the products don't have enough stock. Please update
-						product quantity.</div>
-					<div th:if="${emptyCart}" class="alert alert-warning">Oops,
-						your cart is empty. See if you can find what you like in the
-						bookshelf and add them to cart.</div>
+<div class="grid md:grid-cols-3">
+    <div class="md:col-start-1 md:col-end-3 md:border-r-2 md:border-teal-200">
+        <div th:each="item: ${cartItems}">
+            <div th:id="cart + ${item.id}" class="pt-3 px-10" th:object="${item.product}">
+                <div class="grid md:grid-cols-2 shadow-lg shadow-teal-400 p-4 rounded-lg border-4 border-solid gap-3">
+                    <div class=" bg-white rounded-lg border border-teal-200 shadow-md border-solid border-4 h-fit">
+                        <img class="object-cover rounded w-full  lg:h-48" th:src="@{*{imageUrl}}" th:alt="(*{name} + ' image')"/>
+                    </div>
 
-					<br /> <br />
-					<div class="row">
-						<div class="col-xs-8 ">
-							<h4 style="margin-left:70px;">Products</h4>
-						</div>
-						<div class="col-xs-2">
-							<h4>Price</h4>
-						</div>
-						<div class="col-xs-2">
-							<h4>Qty</h4>
-						</div>
-					</div>
+                    <div class="grid-rows-2 justify-between h-full">
+                        <div>
+                            <a  class="text-3xl text-center text-teal-700 font-semibold mb-1 ml-3 block
+                        hover:text-teal-500" th:href="@{/productDetail(id=*{id})}">
+                                <h th:text="*{name}"></h>
+                            </a>
+                            <div class=" pt-4">
+                                <div class="text-right">
+                                    <h1 class="text-sm p-3 pb-1">Quantity</h1>
+                                    <div th:replace="common/quantity-control :: quntity-control(${item.qty}, ${item.id})"></div>
 
-					<!--**************** display products in cart ****************-->
-
-					<div class="row" th:each="cartItem : ${cartItemList}">
-						<form th:action="@{/shoppingCart/updateCartItem}" method="post">
-							<hr />
-							<div class="col-xs-2">
-								<a th:href="@{bookDetail(id=${cartItem.book.id})}"> <img
-									style="width:70px;"
-									class="img-responsive shelf-book center-block"
-									th:src="#{adminPath}+@{/image/book/}+
-								${cartItem.book.id}+'.png'" />
-								</a>
-							</div>
-							<div class="col-xs-6">
-								<div style="margin-left:50px;">
-								<a th:href="@{/bookDetail?id=}+${cartItem.book.id}"><h4 th:text="${cartItem.book.title}"></h4></a>
-								<p th:if="${cartItem.book.inStockNumber&gt;10}"
-									style="color: green;">In Stock</p>
-								<p
-									th:if="${cartItem.book.inStockNumber&lt;10 and cartItem.book.inStockNumber&gt;0}"
-									style="color: green;">
-									Only <span th:text="${cartItem.book.inStockNumber}"></span> In
-									Stock
-								</p>
-								<p th:if="${cartItem.book.inStockNumber==0}"
-									style="color: darkred;">Product Unavailable</p>
-								<a class="btn btn-danger" th:href="@{/shoppingCart/removeItem?id=}+${cartItem.id}">Delete</a>
-								</div>
-							</div>
-
-							<div class="col-xs-2">
-								<h5 style="color: #db3208; font-size: large;">
-									$<span th:text="${cartItem.book.ourPrice}"
-										th:style="${cartItem.book.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>
-								</h5>
-							</div>
-
-							<div class="col-xs-2">
-								<input hidden="hidden" name="id" th:value="${cartItem.id}" /> <input
-									th:id="${cartItem.id}" th:name="qty" th:disabled="${cartItem.book.inStockNumber==0}" class="form-control cartItemQty" th:value="${cartItem.qty}" />
-								<button style="display: none;"
-									th:id="'update-item-'+${cartItem.id}" type="submit"
-									class="btn btn-warning btn-xs">Update</button>
-							</div>
-						</form>
-					</div>
-
-					<div class="row">
-						<hr />
-						<h4 class="col-xs-12 text-right">
-							<strong style="font-size: large;">Total Price (<span
-								th:text="${#lists.size(cartItemList)}"></span> items):
-							</strong> <span style="color: #db3208; font-szie: large;">$<span
-								th:text="${shoppingCart.grandTotal}"></span></span>
-						</h4>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end of container -->
+                                    <div class="flex  justify-end">
+                                        <span class="text-lg font-semibold text-gray-700">X</span>
+                                        <span th:id="price + ${item.id}" class="text-lg font-semibold text-gray-700" th:text="*{price}"></span>
+                                    </div>
+                                    <div class="flex  justify-end    gap-0 mt-2">
+                                        <span class="text-lg font-semibold text-gray-900">Subtotal = £</span>
+                                        <span th:id="subTotal + ${item.id}" class="sub-total text-lg font-semibold text-gray-900" th:text="${item.subtotal}"></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-center ">
+                                    <a class="cursor-pointer delete-icon" th:href="@{/removeCartItem(id=${item.id})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </a>
+                                </div>
 
 
-	<div th:replace="common/header :: footer"/>
-	
-	<div th:replace="common/header :: body-bottom-scripts" />
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bg-teal-50">
+        <div class="md:mt-56">
+            <div class="flex justify-end  gap-0 mt-2 pr-4">
+                <span class="text-3xl font-semibold text-teal-900">Grand Total = £</span>
+                <span class="text-3xl font-semibold text-teal-900" th:text="${shoppingCart.GrandTotal}" id="grand-total"></span>
+            </div>
+
+            <div id="discount-div" class="mt-2 pr-4 text-right" th:classappend="${shoppingCart.GrandTotal < 50.00} ? hidden ">
+                <h2 class="pr-4">+10% Discount</h2>
+                <span class="text-xl font-bold text-teal-900">New Total =</span>
+                <span id="discount" class="text-xl font-bold text-teal-900" th:text="('£' + ${shoppingCart.discount})"></span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div th:replace="common/header :: footer"></div>
+<script th:inline="javascript">
+    let csrfHeaderName = /*[[${_csrf.headerName}]]*/ "csrf_header";
+    let csrfValue = /*[[${_csrf.token}]]*/ "csrf_value";
+</script>
+<div th:replace="common/header :: body-bottom-scripts"></div>
+<script th:src="@{/js/shoppingCart.js}"></script>
 </body>
 </html>

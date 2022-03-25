@@ -86,38 +86,40 @@ public class UserService {
     public String createAdmin(String password) {
         var opAdmin = userRepository.findByEmail("admin");
 
-        System.out.println(password);
 
         var admin = opAdmin.orElseGet(User::new);
 
         admin.setPassword(passwordEncoder.encode(password));
 
-        Role role = new Role();
-        role.setRoleId(1);
-        role.setName("ROLE_USER");
-        Role role1 = new Role();
-        role1.setRoleId(2);
-        role1.setName("ROLE_ADMIN");
 
-        Set<UserRole> userRoles = new HashSet<>();
+            Role role = new Role();
+            role.setRoleId(1);
+            role.setName("ROLE_USER");
+            Role role1 = new Role();
+            role1.setRoleId(2);
+            role1.setName("ROLE_ADMIN");
 
-        userRoles.add(new UserRole(admin, role));
-        userRoles.add(new UserRole(admin, role1));
+            Set<UserRole> userRoles = new HashSet<>();
 
-        for (UserRole ur : userRoles)
-            roleRepository.save(ur.getRole());
+            userRoles.add(new UserRole(admin, role));
+            userRoles.add(new UserRole(admin, role1));
 
-        admin.setUserRoles(userRoles);
+            for (UserRole ur : userRoles)
+                roleRepository.save(ur.getRole());
 
-        admin.setEmail("admin");
-        admin.setEnabled(true);
+            admin.setUserRoles(userRoles);
+        if (opAdmin.isEmpty()) {
+            admin.setEmail("admin");
+            admin.setFirstName("admin");
+            admin.setEnabled(true);
 
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUser(admin);
-        admin.setShoppingCart(shoppingCart);
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setUser(admin);
+            admin.setShoppingCart(shoppingCart);
+        }
+            admin.setUserShippingList(new ArrayList<UserShipping>());
+            admin.setUserPaymentList(new ArrayList<UserPayment>());
 
-        admin.setUserShippingList(new ArrayList<UserShipping>());
-        admin.setUserPaymentList(new ArrayList<UserPayment>());
 
         userRepository.save(admin);
         return "Admin account created successfully.";

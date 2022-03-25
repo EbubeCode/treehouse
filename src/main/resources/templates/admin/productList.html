@@ -73,7 +73,7 @@
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">#</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Name</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Category</th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Our Price(£)</th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Price(£)</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">List Price(£)</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Shipping weight(kg)</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">In-stock</th>
@@ -85,8 +85,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prodStat.count}"></span></a></td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.name}"></span></a></td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.category}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.ourPrice}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.listPrice}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.price}"></span></a></td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.shippingWeight}"></span></a></td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.inStockNumber}"></span></a></td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.active}"></span></a></td>

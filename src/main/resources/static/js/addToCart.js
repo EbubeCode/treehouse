@@ -1,7 +1,11 @@
 $(document).ready(function () {
-    $("#addToCart").on('click', function () {
+    $("#addToCart").on('click', function (event) {
+        event.preventDefault();
         addToCart();
-})
+});
+    $('#close-dialog').on('click', () => {
+        $('#modal').addClass('hidden');
+    })
 })
 
 function addToCart() {
@@ -16,7 +20,8 @@ function addToCart() {
             xhr.setRequestHeader(csrfHeaderName, csrfValue);
         }
     }).done(function(response) {
-        alert(response);
+        $('#modal').removeClass('hidden');
+        $('#modal-body').text(response);
         }
     ).fail(function() {
         alert("error adding item to car.")

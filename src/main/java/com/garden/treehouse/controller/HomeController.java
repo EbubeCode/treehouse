@@ -99,6 +99,21 @@ public class HomeController {
         return "productDetail";
     }
 
+    @GetMapping("/productDetailS")
+    public String productDetailS(
+            @RequestParam("id") Long id, Model model, Principal principal
+    ) {
+
+        Product product = productService.findById(id);
+
+        model.addAttribute("product", product);
+
+        List<Integer> qtyList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+
+        return "productDetail";
+    }
+
 
     @RequestMapping("/listOfCreditCards")
     public String listOfCreditCards(
