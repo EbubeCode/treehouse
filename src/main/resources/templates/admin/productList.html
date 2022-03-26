@@ -56,7 +56,7 @@
         </div>
         <a th:href="@{/admin/add}" class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br
             focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800 font-medium
-             rounded-lg text-sm px-5 pt-4 text-center mr-2 mb-2 cursor-pointer">
+             rounded-lg text-sm lg:px-5 pt-1 lg:pt-4 px-1 text-center mr-2 mb-2 cursor-pointer">
             Add New Product
         </a>
     </div>
@@ -74,7 +74,6 @@
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Name</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Category</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Price(£)</th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">List Price(£)</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Shipping weight(kg)</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">In-stock</th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Active</th>
@@ -82,13 +81,13 @@
                     </thead>
                     <tbody>
                     <tr data-th-each="prod: ${productList}" th:class="${prodStat.odd}? 'bg-gray-100 border-b' : 'bg-white border-b'">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prodStat.count}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.name}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.category}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.price}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.shippingWeight}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.inStockNumber}"></span></a></td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.active}"></span></a></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><a class="block hover:text-teal-500 text-teal-900  cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prodStat.count}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.name}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.category}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.price}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.shippingWeight}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.inStockNumber}"></span></a></td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a class="block  hover:text-teal-500 text-teal-900 cursor-pointer" th:href="@{/admin/productInfo(id=${prod.id})}"><span th:text="${prod.active}"></span></a></td>
                     </tr>
                     </tbody>
                 </table>

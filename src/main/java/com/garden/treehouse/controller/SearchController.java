@@ -6,10 +6,7 @@ import com.garden.treehouse.services.ProductService;
 import com.garden.treehouse.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,7 +22,7 @@ public class SearchController {
 		this.productService = productService;
 	}
 
-	@RequestMapping("/searchByCategory")
+	@GetMapping("/searchByCategory")
 	public String searchByCategory(
 			@RequestParam("category") String category,
 			Model model, Principal principal
@@ -37,7 +34,11 @@ public class SearchController {
 		}
 		
 
-		List<Product> products = productService.findByCategory(category);
+		List<Product> products ;
+		if (category.equalsIgnoreCase("all"))
+			products = productService.findAll();
+		else
+			products = productService.findByCategory(category);
 		
 		if (products.isEmpty()) {
 			model.addAttribute("emptyList", true);

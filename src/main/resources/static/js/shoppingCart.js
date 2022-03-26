@@ -86,4 +86,9 @@ function calcTotal() {
         if (!discountDiv.hasClass('hidden'))
             discountDiv.addClass('hidden');
     }
+    if (newTotal <= 0)
+        $('#check-out').addClass('hidden')
+    else
+        if ($('#check-out').hasClass('hidden'))
+            $('#check-out').removeClass('hidden');
 }

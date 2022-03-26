@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common-header"></head>
+
+<body>
+<div th:replace="common/header :: navbar"></div>
+
+<div class="p-3">
+     <span>
+        <a class="hover:text-teal-400" th:href="@{/myAccount}">My Account</a>>
+        <a class="hover:text-teal-400" th:href="@{/myAddress}">My Shipping</a>
+        ><span th:text="${title}"></span>
+    </span>
+</div>
+<div class="block m-auto w-full p-2  md:p-6 rounded-lg shadow-lg bg-white md:w-1/2">
+
+    <h1 class="text-center font-bold text-teal-500 text-3xl" th:text="${title}"></h1>
+    <form th:action="@{/addShipping(id=${id})}" th:method="POST" enctype="multipart/form-data" th:object="${userShipping}">
+        <div class="form-group mb-6">
+            <label for="name" class="block text-lg text-gray-500">Shipping Name</label>
+            <input type="text" id="name" class="form-control block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{userShippingName}" placeholder="Shipping Name">
+        </div>
+        <div class="flex justify-left">
+            <div class="mb-6 xl:w-96">
+                <label for="category" class="block text-lg text-gray-500">Shipping Country</label>
+                <select th:field="*{userShippingCountry}" id="category" class=" block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
+                    <option th:selected="(*{userShippingCountry}=='UK')" selected value="UK">UK</option>
+                    <option th:selected="(*{userShippingCountry}=='US')" value="US">US</option>
+                    <option th:selected="(*{userShippingCountry}=='Nigeria')" value="Nigeria">Nigeria</option>
+                    <option th:selected="(*{userShippingCountry}=='Ghana')" value="Ghana">Ghana</option>
+                    <option th:selected="(*{userShippingCountry}=='France')" value="France">France</option>
+                    <option th:selected="(*{userShippingCountry}=='Germany')" value="Germany">Germany</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mb-6">
+            <label for="shipWeight" class="block text-lg text-gray-500">State</label>
+            <input type="text" id="shipWeight"
+                   class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{userShippingState}" placeholder="State">
+        </div>
+
+        <div class="form-group mb-6">
+            <label for="inStock" class="block text-lg text-gray-500">City</label>
+            <input type="text" step="any" id="inStock"
+                   class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{userShippingCity}" placeholder="City">
+        </div>
+
+        <div class="form-group mb-6">
+            <label for="ourPrice" class="block text-lg text-gray-500">Street</label>
+            <input type="text" step="any" id="ourPrice"
+                   class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{userShippingStreet}"
+                   placeholder="Street">
+        </div>
+
+
+        <div class="form-group mb-6">
+            <label for="zipCode" class="block text-lg text-gray-500">Zipcode</label>
+            <input type="text" step="any" id="zipCode"
+                   class="form-control block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{userShippingZipcode}"
+                   placeholder="Zipcode">
+        </div>
+
+        <div class="form-group form-check  mb-6">
+            <input type="checkbox"
+                   class="form-check-input appearance-none h-4 w-4 border border-gray-300
+                        rounded-sm bg-white checked:bg-teal-600 checked:border-blue-600 focus:outline-none
+                         transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2
+                         cursor-pointer" th:field="*{userShippingDefault}"
+                   id="exampleCheck87" checked>
+            <label class="form-check-label inline-block text-gray-800" for="exampleCheck87">
+                Default Shipping</label>
+        </div>
+        <button type="submit"
+                class="
+                          w-fit
+                          px-6
+                          py-2.5
+                          bg-teal-500
+                          text-white
+                          font-medium
+                          text-xs
+                          leading-tight
+                          uppercase
+                          rounded
+                          shadow-md
+                          hover:bg-teal-700 hover:shadow-lg
+                          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+                          active:bg-blue-800 active:shadow-lg
+                          transition
+                          duration-150
+                          ease-in-out"><span th:text="${title}"></span>
+        </button>
+    </form>
+</div>
+
+
+<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>

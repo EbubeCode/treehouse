@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common-header"></head>
+
+<body>
+<div th:replace="common/header :: navbar"></div>
+
+<div class="pl-4">
+    <span>
+        <a class="hover:text-teal-400" th:href="@{/myAccount}">My Account</a>
+        <a class="hover:text-teal-400" th:href="@{/myOrders}">>Orders</a>
+        >OrderInfo
+    </span>
+    <h2 class="text-3xl p-5">Order Info</h2>
+    <div class="bg-teal-50">
+        <div class="p-3 " th:object="${order}">
+            <p>Order Date: <span th:text="*{orderDate}"></span></p>
+            <p>Order Total: £<span th:text="*{orderTotal}"></span></p>
+            <p>Order Status: <span th:text="*{orderStatus}"></span></p>
+            <p>Shipping Method: <span th:text="*{shippingMethod}"></span></p>
+            <p>Shipping Date: <span th:text="*{shippingDate}"></span></p>
+        </div>
+        <div class="p-3" th:object="${order.payment}">
+            <h1>Payment</h1>
+            <div class="pl-3">
+                <p>Card Name: <span th:text="*{cardName}"></span></p>
+                <p>Card Number: <span th:text="*{cardNumber}"></span></p>
+                <p>Card Type: <span th:text="*{type}"></span></p>
+                <p>Holder Name: <span th:text="*{holderName}"></span></p>
+            </div>
+
+            <div class="p-3" th:object="${order.shippingAddress}">
+                <h1>Payment</h1>
+                <div class="pl-3">
+                    <p>Shipping Address Name: <span th:text="*{shippingAddressName}"></span></p>
+                    <p>Street: <span th:text="*{shippingAddressStreet}"></span></p>
+                    <p>City: <span th:text="*{shippingAddressCity}"></span></p>
+                    <p>State: <span th:text="*{shippingAddressState}"></span></p>
+                    <p>Country: <span th:text="*{shippingAddressCountry}"></span></p>
+                    <p>Zipcode: <span th:text="*{shippingAddressZipcode}"></span></p>
+                </div>
+
+            </div>
+
+            <div class="p-3" th:object="${order.billingAddress}">
+                <h1>Payment</h1>
+                <div class="pl-3">
+                    <p>Billing Address Name: <span th:text="*{billingAddressName}"></span></p>
+                    <p>Street: <span th:text="*{billingAddressStreet}"></span></p>
+                    <p>City: <span th:text="*{billingAddressCity}"></span></p>
+                    <p>State: <span th:text="*{billingAddressState}"></span></p>
+                    <p>Country: <span th:text="*{billingAddressCountry}"></span></p>
+                    <p>Zipcode: <span th:text="*{billingAddressZipcode}"></span></p>
+                </div>
+
+            </div>
+
+            <div class="p-3">
+                <h1>Products purchased</h1>
+                <div class="pl-3" th:each="item: ${order.cartItemList}">
+                    <a th:href="@{/productDetail(id=${item.product.id})}"><span th:text="${item.product.name}"></span></a>
+                    <p>Quantity: <span th:text="${item.qty}"></span></p>
+                    <p>Price: <span th:text="${item.subtotal}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common/header :: footer"></div>
+
+<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>

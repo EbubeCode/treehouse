@@ -117,8 +117,8 @@
 
             <div class="form-group mb-6">
                 <label for="description" class="block text-lg text-gray-500">Product description</label>
-      <textarea id="description"
-              class="
+                <textarea id="description"
+                          class="
                     form-control
                     block
                     w-full
@@ -134,8 +134,8 @@
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              rows="3" placeholder="Description" th:field="*{description}"
-      ></textarea>
+                          rows="3" placeholder="Description" th:field="*{description}"
+                ></textarea>
             </div>
             <div class="form-group form-check  mb-6">
                 <input type="checkbox"
@@ -150,7 +150,8 @@
             <div class="mb-3 text-gray-700 ">
 
                 <label for="image" class="block text-xl">Product Image: </label>
-                <input id="image" th:field="*{productImage}" type="file" name="image" accept="image/jpg, image/jpeg, image/png"/>
+                <input id="image" th:field="*{productImage}" type="file" name="image"
+                       accept="image/jpg, image/jpeg, image/png"/>
 
             </div>
             <button type="submit"

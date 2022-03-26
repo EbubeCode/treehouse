@@ -59,7 +59,6 @@ public class CheckoutController {
 	@RequestMapping("/checkout")
 	public String checkout(
 			@RequestParam("id") Long cartId,
-			@RequestParam(value="missingRequiredField", required=false) boolean missingRequiredField,
 			Model model, Principal principal
 			){
 		User user = userService.findByEmail(principal.getName());
@@ -70,17 +69,8 @@ public class CheckoutController {
 		
 		List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 		
-		if(cartItemList.size() == 0) {
-			model.addAttribute("emptyCart", true);
-			return "forward:/shoppingCart/cart";
-		}
-		
-		for (CartItem cartItem : cartItemList) {
-			if(cartItem.getProduct().getInStockNumber() < cartItem.getQty()) {
-				model.addAttribute("notEnoughStock", true);
-				return "forward:/shoppingCart/cart";
-			}
-		}
+
+
 		
 		List<UserShipping> userShippingList = user.getUserShippingList();
 		List<UserPayment> userPaymentList = user.getUserPaymentList();
@@ -88,18 +78,7 @@ public class CheckoutController {
 		model.addAttribute("userShippingList", userShippingList);
 		model.addAttribute("userPaymentList", userPaymentList);
 		
-		if (userPaymentList.size() == 0) {
-			model.addAttribute("emptyPaymentList", true);
-		} else {
-			model.addAttribute("emptyPaymentList", false);
-		}
-		
-		if (userShippingList.size() == 0) {
-			model.addAttribute("emptyShippingList", true);
-		} else {
-			model.addAttribute("emptyShippingList", false);
-		}
-		
+
 		ShoppingCart shoppingCart = user.getShoppingCart();
 		
 		for(UserShipping userShipping : userShippingList) {
@@ -117,11 +96,7 @@ public class CheckoutController {
 
 		addAttributes(model, user, cartItemList);
 
-		model.addAttribute("classActiveShipping", true);
-		if(missingRequiredField) {
-			model.addAttribute("missingRequiredField", true);
-		}
-		
+
 		return "checkout";
 		
 	}

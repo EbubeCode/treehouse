@@ -5,10 +5,10 @@
 <body>
 <div th:replace="common/header :: navbar"></div>
 
-<div class="container-fluid">
-	<span><a th:href="@{/myAcount}">My Account</a>>Login & Security</span>
+<div class="pl-4">
+	<span><a class="hover:text-teal-400 text-teal-700" th:href="@{/myAccount}">My Account</a>>Login & Security</span>
 	<h2 class="text-3xl p-5">Login & Security</h2>
-	<div class="container">
+	<div>
 		<div class="rounded border-2 border-black p-2" th:object="${user}">
 			<div>
 				<h3 class="text-xl p-2">Name:</h3>
@@ -35,7 +35,8 @@
 			</div>
 			<hr/>
 			<div class="flex justify-end p-3">
-				<a th:href="@{/updateUserInfo}" class="no-underline acc-tabs cursor-pointer p-2 shadow rounded">
+				<a th:href="@{/updateUserInfo}" class="no-underline bg-blue-300
+				 hover:bg-blue-100 cursor-pointer p-2 shadow-lg rounded">
 					Update Info
 				</a>
 			</div>

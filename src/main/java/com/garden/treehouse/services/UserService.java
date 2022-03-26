@@ -55,7 +55,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(User user) {
+    public void createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = new Role();
         role.setRoleId(1);
@@ -77,7 +77,6 @@ public class UserService {
 
         var localUser = userRepository.save(user);
         publisher.publishEvent(new CreateUserEvent(localUser));
-        return localUser;
 
     }
 
@@ -91,7 +90,7 @@ public class UserService {
 
         admin.setPassword(passwordEncoder.encode(password));
 
-
+        if (opAdmin.isEmpty()) {
             Role role = new Role();
             role.setRoleId(1);
             role.setName("ROLE_USER");
@@ -108,7 +107,7 @@ public class UserService {
                 roleRepository.save(ur.getRole());
 
             admin.setUserRoles(userRoles);
-        if (opAdmin.isEmpty()) {
+
             admin.setEmail("admin");
             admin.setFirstName("admin");
             admin.setEnabled(true);
@@ -130,18 +129,31 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user) {
+    public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user, boolean def) {
         userPayment.setUser(user);
         userPayment.setUserBilling(userBilling);
-        userPayment.setDefaultPayment(true);
+        if (def) {
+            var defaultPayment = user.getUserPaymentList().stream()
+                    .filter(UserPayment::isDefaultPayment)
+                    .findFirst();
+            defaultPayment.ifPresent(payment -> payment.setDefaultPayment(false));
+            userPayment.setDefaultPayment(true);
+        }
         userBilling.setUserPayment(userPayment);
         user.getUserPaymentList().add(userPayment);
         save(user);
     }
 
-    public void updateUserShipping(UserShipping userShipping, User user) {
+    public void updateUserShipping(UserShipping userShipping, User user, boolean def) {
         userShipping.setUser(user);
-        userShipping.setUserShippingDefault(true);
+        if (def) {
+            var defaultShipping = user.getUserShippingList().stream()
+                    .filter(UserShipping::isUserShippingDefault)
+                    .findFirst();
+            defaultShipping.ifPresent(shipping -> shipping.setUserShippingDefault(false));
+            userShipping.setUserShippingDefault(true);
+        }
+
         user.getUserShippingList().add(userShipping);
         save(user);
     }
@@ -164,7 +176,7 @@ public class UserService {
         List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
 
         for (UserShipping userShipping : userShippingList) {
-            if (userShipping.getId() == userShippingId) {
+            if (userShipping.getId().equals(userShippingId)) {
                 userShipping.setUserShippingDefault(true);
                 userShippingRepository.save(userShipping);
             } else {

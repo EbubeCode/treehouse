@@ -2,8 +2,10 @@ package com.garden.treehouse.controller;
 
 import com.garden.treehouse.events.ForgotPasswordEvent;
 import com.garden.treehouse.model.User;
-import com.garden.treehouse.services.TokenService;
-import com.garden.treehouse.services.UserService;
+import com.garden.treehouse.model.UserBilling;
+import com.garden.treehouse.model.UserPayment;
+import com.garden.treehouse.model.UserShipping;
+import com.garden.treehouse.services.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,9 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -26,22 +26,26 @@ public class UserController {
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userSecurityService;
+    private final OrderService orderService;
+    private final UserShippingService userShippingService;
+    private final UserPaymentService userPaymentService;
 
 
-    public UserController(ApplicationEventPublisher applicationEventPublisher, UserService userService,
-                          TokenService tokenService, PasswordEncoder passwordEncoder, UserDetailsService userSecurityService) {
+    public UserController(ApplicationEventPublisher applicationEventPublisher, UserService userService, TokenService tokenService, PasswordEncoder passwordEncoder, UserDetailsService userSecurityService, OrderService orderService, UserShippingService userShippingService, UserPaymentService userPaymentService) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.userService = userService;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
         this.userSecurityService = userSecurityService;
+        this.orderService = orderService;
+        this.userShippingService = userShippingService;
+        this.userPaymentService = userPaymentService;
     }
 
 
     @GetMapping("/login")
     public String login(Principal principal) {
-        if (principal == null)
-            return "login";
+        if (principal == null) return "login";
         return "index";
     }
 
@@ -63,7 +67,7 @@ public class UserController {
     @PostMapping("/forgotPassword")
     public String forgetPassword(Model model, @ModelAttribute String email) {
         var user = userService.findByEmail(email);
-        if (email != null) {
+        if (user != null) {
             applicationEventPublisher.publishEvent(new ForgotPasswordEvent(email));
             return "email_verification_consent";
         }
@@ -72,9 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String newUserPost(
-            HttpServletRequest request,
-            @ModelAttribute("user") User user, Model model) throws Exception {
+    public String newUserPost(@ModelAttribute("user") User user, Model model) {
         if (!user.getPassword().equals(user.getMatchingPassword())) {
             model.addAttribute("errors", "Passwords don't match");
             return "signup";
@@ -93,9 +95,7 @@ public class UserController {
     }
 
     @GetMapping("/verify")
-    public String verifyEmail(@RequestParam("token_id") String tokenId,
-                              @RequestParam("is_password") boolean password,
-                              Model model, Principal principal) {
+    public String verifyEmail(@RequestParam("token_id") String tokenId, @RequestParam("is_password") boolean password, Model model, Principal principal) {
         if (principal != null) {
             return "forward:/";
         }
@@ -121,32 +121,6 @@ public class UserController {
         };
     }
 
-    //    @RequestMapping("/newUser")
-//    public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
-//        PasswordResetToken passToken = userService.getPasswordResetToken(token);
-//
-//        if (passToken == null) {
-//            String message = "Invalid Token.";
-//            model.addAttribute("message", message);
-//            return "redirect:/badRequest";
-//        }
-//
-//        User user = passToken.getUser();
-//        String username = user.getEmail();
-//
-//        UserDetails userDetails = userSecurityService.loadUserByUsername(username);
-//
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-//                userDetails.getAuthorities());
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        model.addAttribute("user", user);
-//
-//        model.addAttribute("classActiveEdit", true);
-//        model.addAttribute("orderList", user.getOrderList());
-//        return "myProfile";
-//    }
     @GetMapping("/signup")
     public String signUp(Model model, Principal principal) {
         if (principal != null) {
@@ -169,11 +143,10 @@ public class UserController {
     }
 
     @PostMapping("/updatePassword")
-    public String update(@RequestParam("email") String email, @ModelAttribute("password") String password,
-                         @ModelAttribute("matchingPassword") String matchingPassword, Model model) {
+    public String update(@RequestParam("email") String email, @ModelAttribute("password") String password, @ModelAttribute("matchingPassword") String matchingPassword, Model model) {
         if (!password.equals(matchingPassword)) {
-        model.addAttribute("errors", "passwords do not match");
-        return "new_password";
+            model.addAttribute("errors", "passwords do not match");
+            return "new_password";
         }
         var user = userService.findByEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -183,7 +156,7 @@ public class UserController {
     }
 
     @GetMapping("/myAccount")
-    public String myAccount(Model model, Principal principal) {
+    public String myAccount() {
 
         return "myAccount";
     }
@@ -205,11 +178,7 @@ public class UserController {
 
 
     @PostMapping("/updateUserInfo")
-    public String updateUserInfo(
-            Principal principal,
-            @ModelAttribute("user") User user,
-            Model model
-    ) throws Exception {
+    public String updateUserInfo(Principal principal, @ModelAttribute("user") User user, Model model) throws Exception {
         User currentUser = userService.findByEmail(principal.getName());
 
         if (currentUser == null) {
@@ -225,7 +194,6 @@ public class UserController {
         }
 
 
-
         currentUser.setFirstName(user.getFirstName());
         currentUser.setLastName(user.getLastName());
 
@@ -234,12 +202,163 @@ public class UserController {
 
         UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getEmail());
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-                userDetails.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/myProfile";
+    }
+
+    @GetMapping("/myOrders")
+    public String myOrders(Model model, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+
+        model.addAttribute("orders", user.getOrderList());
+
+        return "myOrders";
+    }
+
+    @GetMapping("/orderInfo")
+    public String orderInfo(@RequestParam("id") Long id, Model model) {
+        var order = orderService.findById(id);
+        model.addAttribute("order", order);
+
+        return "orderInfo";
+    }
+
+    @GetMapping("/myAddress")
+    public String myAddress(Model model, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+        var shippingList = user.getUserShippingList();
+        model.addAttribute("shippingList", shippingList);
+
+        return "myShipping";
+    }
+
+    @GetMapping("/addShipping")
+    public String updateShipping(@RequestParam(name = "id", required = false) Long id, Model model) {
+        if (id == null) {
+            var userShipping = new UserShipping();
+            model.addAttribute("userShipping", userShipping);
+            model.addAttribute("title", "Add Address");
+            model.addAttribute("id", 0);
+            return "addAddress";
+
+        }
+
+        var userShipping = userShippingService.findById(id);
+        model.addAttribute("userShipping", userShipping);
+        model.addAttribute("title", "Update Address");
+        model.addAttribute("id", id);
+        return "addAddress";
+    }
+
+    @PostMapping("/addShipping")
+    public String add_updateShipping(@RequestParam(name = "id") Long id,
+                                     @ModelAttribute UserShipping userShipping,
+                                     Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+        if (id != 0) {
+        var opShipping = userShippingService.findById(id);
+
+            convertShipping(opShipping, userShipping);
+            userService.updateUserShipping(opShipping, user, opShipping.isUserShippingDefault());
+        }
+        else
+            userService.updateUserShipping(userShipping, user, userShipping.isUserShippingDefault());
+
+        return "redirect:/myAddress";
+    }
+
+    private void convertShipping(UserShipping old, UserShipping newShipping) {
+        old.setUserShippingDefault(newShipping.isUserShippingDefault());
+        old.setUserShippingStreet(newShipping.getUserShippingStreet());
+        old.setUserShippingCity(newShipping.getUserShippingCity());
+        old.setUserShippingState(newShipping.getUserShippingState());
+        old.setUserShippingCountry(newShipping.getUserShippingCountry());
+        old.setUserShippingZipcode(newShipping.getUserShippingZipcode());
+    }
+
+    @DeleteMapping("/removeUserShipping")
+    @ResponseBody
+    public Long removeUserShipping(@RequestParam("id") Long userShippingId) {
+
+        userShippingService.deleteById(userShippingId);
+        return userShippingId;
+    }
+
+
+    @GetMapping("/myPayment")
+    public String myPayment(Model model, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+        var payments = user.getUserPaymentList();
+        model.addAttribute("payments", payments);
+
+        return "myPayment";
+    }
+
+    @GetMapping("/addPayment")
+    public String updatePayment(@RequestParam(name = "id", required = false) Long id, Model model) {
+        if (id == null) {
+            var userPayment = new UserPayment();
+            var userBilling = new UserBilling();
+            model.addAttribute("userPayment", userPayment);
+            model.addAttribute("userBilling", userBilling);
+            model.addAttribute("title", "Add Payment");
+            model.addAttribute("id", 0);
+            return "addPayment";
+
+        }
+
+        var userPayment = userPaymentService.findById(id);
+        model.addAttribute("userPayment", userPayment);
+        model.addAttribute("userBilling", userPayment.getUserBilling());
+        model.addAttribute("title", "Update Payment");
+        model.addAttribute("id", id);
+        return "addPayment";
+    }
+
+    @PostMapping("/addPayment")
+    public String add_updatePayment(@RequestParam(name = "id") Long id,
+                                     @ModelAttribute UserPayment userPayment,
+                                     @ModelAttribute UserBilling userBilling,
+                                     Principal principal) {
+        var opPayment = userPaymentService.findById(id);
+        var user = userService.findByEmail(principal.getName());
+        if (opPayment != null) {
+            var oldUserBilling = opPayment.getUserBilling();
+            convertPayment(opPayment, userPayment, oldUserBilling, userBilling);
+            userService.updateUserBilling(oldUserBilling, opPayment, user, opPayment.isDefaultPayment());
+        }
+        else
+            userService.updateUserBilling(userBilling, userPayment, user, userPayment.isDefaultPayment());
+
+        return "redirect:/myPayment";
+    }
+
+    private void convertPayment(UserPayment old, UserPayment newPayment, UserBilling oldBilling, UserBilling newBilling) {
+        old.setDefaultPayment(newPayment.isDefaultPayment());
+        old.setHolderName(newPayment.getHolderName());
+        old.setCardName(newPayment.getCardName());
+        old.setCardNumber(newPayment.getCardNumber());
+        old.setType(newPayment.getType());
+        old.setExpiryMonth(newPayment.getExpiryMonth());
+        old.setExpiryYear(newPayment.getExpiryYear());
+        old.setCvc(newPayment.getCvc());
+
+        oldBilling.setUserBillingStreet(newBilling.getUserBillingStreet());
+        oldBilling.setUserBillingCity(newBilling.getUserBillingCity());
+        oldBilling.setUserBillingState(newBilling.getUserBillingState());
+        oldBilling.setUserBillingCountry(newBilling.getUserBillingCountry());
+        oldBilling.setUserBillingZipcode(newBilling.getUserBillingZipcode());
+    }
+
+    @DeleteMapping("/removeUserPayment")
+    @ResponseBody
+    public Long removeUserPayment(@RequestParam("id") Long paymentId) {
+
+        userPaymentService.deleteById(paymentId);
+        return paymentId;
     }
 
 }
