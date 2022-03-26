@@ -299,7 +299,7 @@ public class UserController {
 
     @GetMapping("/addPayment")
     public String updatePayment(@RequestParam(name = "id", required = false) Long id, Model model) {
-        if (id == null) {
+        if (id == 0) {
             var userPayment = new UserPayment();
             var userBilling = new UserBilling();
             model.addAttribute("userPayment", userPayment);

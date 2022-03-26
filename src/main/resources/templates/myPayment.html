@@ -45,36 +45,36 @@
                             th:class="${paymentStat.odd}? 'bg-gray-100 border-b' : 'bg-white border-b'">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><a
                                     class="block hover:text-teal-500 text-teal-900  cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${paymentStat.count}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.type}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.cardName}"></span></a></td>
                             <td class="text-sm  text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.cardNumber}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.expiryMonth}"></span>/<span
                                     th:text="${payment.expiryYear}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.cvc}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                    th:href="@{/adPayment(id=${payment.id})}"><span
+                                    th:href="@{/addPayment(id=${payment.id})}"><span
                                     th:text="${payment.holderName}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap flex justify-between pr-3">
                                 <a class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
-                                   th:href="@{/adPayment(id=${payment.id})}"><span
+                                   th:href="@{/add Payment(id=${payment.id})}"><span
                                         th:text="${payment.defaultPayment}"></span></a>
                                 <a class="cursor-pointer delete-row"
                                    th:href="@{/removePayment(id=${payment.id})}">
