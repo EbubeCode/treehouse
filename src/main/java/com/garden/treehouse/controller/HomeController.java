@@ -1,18 +1,17 @@
 package com.garden.treehouse.controller;
 
-import com.garden.treehouse.model.*;
+import com.garden.treehouse.model.Product;
+import com.garden.treehouse.model.User;
 import com.garden.treehouse.repos.ProductRepository;
-import com.garden.treehouse.services.*;
-import com.garden.treehouse.utility.USConstants;
+import com.garden.treehouse.services.ProductService;
+import com.garden.treehouse.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -20,24 +19,13 @@ import java.util.List;
 public class HomeController {
     private final UserService userService;
     private final ProductService productService;
-    private final UserPaymentService userPaymentService;
-    private final UserShippingService userShippingService;
     private final ProductRepository productRepository;
-    private final CartItemService cartItemService;
-    private final OrderService orderService;
 
     public HomeController(UserService userService, ProductService productService,
-                          UserPaymentService userPaymentService,
-                          UserShippingService userShippingService,
-                          ProductRepository productRepository, CartItemService cartItemService,
-                          OrderService orderService) {
+                          ProductRepository productRepository) {
         this.userService = userService;
         this.productService = productService;
-        this.userPaymentService = userPaymentService;
-        this.userShippingService = userShippingService;
         this.productRepository = productRepository;
-        this.cartItemService = cartItemService;
-        this.orderService = orderService;
     }
 
     @RequestMapping("/")
@@ -93,7 +81,6 @@ public class HomeController {
 
         model.addAttribute("product", product);
 
-        List<Integer> qtyList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
 
         return "productDetail";
@@ -101,15 +88,11 @@ public class HomeController {
 
     @GetMapping("/productDetailS")
     public String productDetailS(
-            @RequestParam("id") Long id, Model model, Principal principal
-    ) {
+            @RequestParam("id") Long id, Model model) {
 
         Product product = productService.findById(id);
 
         model.addAttribute("product", product);
-
-        List<Integer> qtyList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-
 
         return "productDetail";
     }
