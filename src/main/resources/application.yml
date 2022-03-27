@@ -3,8 +3,8 @@ spring:
     active: dev
 
   datasource:
-    url: jdbc:postgresql://ec2-34-224-226-38.compute-1.amazonaws.com:5432/d93g60lnivgou8
-    username: dabenpyscotvli
+    url: ${dbUrl}
+    username: ${dbUsername}
     password: ${dbPassword}
 
   jpa:
@@ -17,7 +17,7 @@ spring:
 
   mail:
     host: smtp.gmail.com
-    username: chukwumaebubemiracle97@gmail.com
+    username: ${emailUsername}
     password: ${emailPassword}
     properties:
       mail:

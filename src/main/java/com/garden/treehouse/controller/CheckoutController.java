@@ -3,18 +3,13 @@ package com.garden.treehouse.controller;
 import com.garden.treehouse.model.*;
 import com.garden.treehouse.services.*;
 import com.garden.treehouse.utility.MailConstructor;
-import com.garden.treehouse.utility.USConstants;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +51,7 @@ public class CheckoutController {
 		this.orderService = orderService;
 	}
 
-	@RequestMapping("/checkout")
+	@GetMapping("/checkout")
 	public String checkout(
 			@RequestParam("id") Long cartId,
 			Model model, Principal principal
@@ -67,20 +62,15 @@ public class CheckoutController {
 			return "badRequestPage";
 		}
 		
-		List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-		
-
-
-		
-		List<UserShipping> userShippingList = user.getUserShippingList();
-		List<UserPayment> userPaymentList = user.getUserPaymentList();
+		var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
+		var userShippingList = user.getUserShippingList();
+		var userPaymentList = user.getUserPaymentList();
 		
 		model.addAttribute("userShippingList", userShippingList);
 		model.addAttribute("userPaymentList", userPaymentList);
 		
 
-		ShoppingCart shoppingCart = user.getShoppingCart();
-		
+
 		for(UserShipping userShipping : userShippingList) {
 			if(userShipping.isUserShippingDefault()) {
 				shippingAddressService.setByUserShipping(userShipping, shippingAddress);
@@ -248,8 +238,5 @@ public class CheckoutController {
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", user.getShoppingCart());
 
-		List<String> stateList = USConstants.listOfUSStatesCode;
-		Collections.sort(stateList);
-		model.addAttribute("stateList", stateList);
 	}
 }
