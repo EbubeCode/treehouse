@@ -14,6 +14,7 @@ public class TreehouseApplication implements CommandLineRunner {
 	@Value("${admin-password}")
 	private String adminPassword;
 
+
 	@Autowired
 	private UserService userService;
 

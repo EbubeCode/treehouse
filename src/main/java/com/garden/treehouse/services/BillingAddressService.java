@@ -9,7 +9,6 @@ public class BillingAddressService{
 	
 	public BillingAddress setByUserBilling(UserBilling userBilling, BillingAddress billingAddress) {
 		
-		billingAddress.setBillingAddressName(userBilling.getUserBillingName());
 		billingAddress.setBillingAddressStreet(userBilling.getUserBillingStreet());
 		billingAddress.setBillingAddressCity(userBilling.getUserBillingCity());
 		billingAddress.setBillingAddressState(userBilling.getUserBillingState());

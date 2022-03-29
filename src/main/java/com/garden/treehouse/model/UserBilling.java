@@ -1,5 +1,7 @@
 package com.garden.treehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class UserBilling {
     private String userBillingZipcode;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private UserPayment userPayment;
 
     public Long getId() {

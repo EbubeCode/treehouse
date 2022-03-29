@@ -9,7 +9,6 @@ public class ShippingAddressService{
 	
 	public ShippingAddress setByUserShipping(UserShipping userShipping, ShippingAddress shippingAddress) {
 		
-		shippingAddress.setShippingAddressName(userShipping.getUserShippingName());
 		shippingAddress.setShippingAddressStreet(userShipping.getUserShippingStreet());
 		shippingAddress.setShippingAddressCity(userShipping.getUserShippingCity());
 		shippingAddress.setShippingAddressState(userShipping.getUserShippingState());

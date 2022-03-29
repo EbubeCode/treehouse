@@ -7,6 +7,7 @@ import com.garden.treehouse.model.UserPayment;
 import com.garden.treehouse.model.UserShipping;
 import com.garden.treehouse.services.*;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -299,7 +300,7 @@ public class UserController {
 
     @GetMapping("/addPayment")
     public String updatePayment(@RequestParam(name = "id", required = false) Long id, Model model) {
-        if (id == 0) {
+        if (id == null) {
             var userPayment = new UserPayment();
             var userBilling = new UserBilling();
             model.addAttribute("userPayment", userPayment);
@@ -341,7 +342,7 @@ public class UserController {
         old.setHolderName(newPayment.getHolderName());
         old.setCardName(newPayment.getCardName());
         old.setCardNumber(newPayment.getCardNumber());
-        old.setType(newPayment.getType());
+        old.setCardType(newPayment.getCardType());
         old.setExpiryMonth(newPayment.getExpiryMonth());
         old.setExpiryYear(newPayment.getExpiryYear());
         old.setCvc(newPayment.getCvc());
@@ -361,4 +362,25 @@ public class UserController {
         return paymentId;
     }
 
+    @GetMapping(value = "/userShipping/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public UserShipping getUserShipping(@PathVariable Long id, Principal principal){
+        var user = userService.findByEmail(principal.getName());
+
+        return user.getUserShippingList().stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @GetMapping(value = "/userPayment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public UserPayment getUserPayment(@PathVariable Long id, Principal principal){
+        var user = userService.findByEmail(principal.getName());
+
+        return user.getUserPaymentList().stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 }

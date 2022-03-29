@@ -34,32 +34,28 @@
                         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                    th:field="*{holderName}" placeholder="Holder Name">
         </div>
-        <div class="flex justify-left">
-            <div class="mb-6 xl:w-96">
-                <label for="type" class="block text-lg text-gray-500">Card Type</label>
-                <select th:field="*{type}" id="type" class=" block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
-                    <option th:selected="(*{type}=='Debit')" selected value="Debit">Debit</option>
-                    <option th:selected="(*{type}=='Credit')" value="Credit">Credit</option>
-                </select>
-            </div>
+        <div class="form-group mb-6">
+            <label for="cardName" class="block text-lg text-gray-500">Card Name</label>
+            <input type="text" id="cardName" class="form-control block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                   th:field="*{cardName}" placeholder="Holder Name">
         </div>
         <div class="flex justify-left">
             <div class="mb-6 xl:w-96">
-                <label for="cardName" class="block text-lg text-gray-500">Card Name</label>
-                <select th:field="*{cardName}" id="cardName" class=" block
+                <label for="type" class="block text-lg text-gray-500">Card Type</label>
+                <select th:field="*{cardType}" id="type" class=" block
                             w-full
                             px-3
                             py-1.5
@@ -73,9 +69,9 @@
                             ease-in-out
                             m-0
       focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
-                    <option th:selected="(*{cardName}=='Master Card')" selected value="Master Card">Master Card</option>
-                    <option th:selected="(*{cardName}=='Visa')" value="Visa">Visa</option>
-                    <option th:selected="(*{cardName}=='Verve')" value="Verve">Verve</option>
+                    <option th:selected="(*{cardType}=='Master Card')" selected value="Master Card">Master Card</option>
+                    <option th:selected="(*{cardType}=='Visa')" value="Visa">Visa</option>
+                    <option th:selected="(*{cardType}=='Verve')" value="Verve">Verve</option>
                 </select>
             </div>
         </div>

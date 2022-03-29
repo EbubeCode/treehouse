@@ -63,19 +63,24 @@ public class ShoppingCartController {
 
     @PostMapping("/updateCartItem/{id}/{qty}")
     @ResponseBody
-    public String updateShoppingCart(@PathVariable Long id, @PathVariable int qty) {
+    public String updateShoppingCart(@PathVariable Long id, @PathVariable int qty, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
         CartItem cartItem = cartItemService.findById(id);
 
         cartItem.setQty(qty);
         cartItemService.updateCartItem(cartItem);
+        shoppingCartService.updateShoppingCart(user.getShoppingCart());
 
         return cartItem.getQty() + "";
     }
 
     @DeleteMapping("/removeCartItem")
     @ResponseBody
-    public Long removeItem(@RequestParam("id") Long id) {
+    public Long removeItem(@RequestParam("id") Long id, Principal principal) {
+        var user = userService.findByEmail(principal.getName());
+
         cartItemService.removeCartItem(cartItemService.findById(id));
+        shoppingCartService.updateShoppingCart(user.getShoppingCart());
 
         return id;
     }

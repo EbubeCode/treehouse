@@ -7,7 +7,6 @@ public class ShippingAddress {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String ShippingAddressName;
 	private String ShippingAddressStreet;
 	private String ShippingAddressCity;
 	private String ShippingAddressState;
@@ -24,16 +23,6 @@ public class ShippingAddress {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-
-	public String getShippingAddressName() {
-		return ShippingAddressName;
-	}
-
-
-	public void setShippingAddressName(String shippingAddressName) {
-		ShippingAddressName = shippingAddressName;
 	}
 
 

@@ -9,7 +9,6 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String type;
-	private String cardName;
 	private String cardNumber;
 	private int expiryMonth;
 	private int expiryYear;
@@ -19,9 +18,6 @@ public class Payment {
 	@OneToOne
 	private Order order;
 	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userPayment")
-	private UserBilling userBilling;
-
 	public Long getId() {
 		return id;
 	}
@@ -36,14 +32,6 @@ public class Payment {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getCardName() {
-		return cardName;
-	}
-
-	public void setCardName(String cardName) {
-		this.cardName = cardName;
 	}
 
 	public String getCardNumber() {
@@ -94,13 +82,5 @@ public class Payment {
 		this.order = order;
 	}
 
-	public UserBilling getUserBilling() {
-		return userBilling;
-	}
 
-	public void setUserBilling(UserBilling userBilling) {
-		this.userBilling = userBilling;
-	}
-	
-	
 }

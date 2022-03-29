@@ -104,7 +104,6 @@ public class CheckoutController {
 		model.addAttribute("cartItemList", cartItemList);
 
 		if (billingSameAsShipping.equals("true")) {
-			billingAddress.setBillingAddressName(shippingAddress.getShippingAddressName());
 			billingAddress.setBillingAddressStreet(shippingAddress.getShippingAddressStreet());
 			billingAddress.setBillingAddressCity(shippingAddress.getShippingAddressCity());
 			billingAddress.setBillingAddressState(shippingAddress.getShippingAddressState());
@@ -114,11 +113,9 @@ public class CheckoutController {
 
 		if (shippingAddress.getShippingAddressStreet().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
 				|| shippingAddress.getShippingAddressState().isEmpty()
-				|| shippingAddress.getShippingAddressName().isEmpty()
 				|| shippingAddress.getShippingAddressZipcode().isEmpty() || payment.getCardNumber().isEmpty()
 				|| payment.getCvc() == 0 || billingAddress.getBillingAddressStreet().isEmpty()
 				|| billingAddress.getBillingAddressCity().isEmpty() || billingAddress.getBillingAddressState().isEmpty()
-				|| billingAddress.getBillingAddressName().isEmpty()
 				|| billingAddress.getBillingAddressZipcode().isEmpty())
 			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
 		

@@ -1,5 +1,7 @@
 package com.garden.treehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,7 +10,7 @@ public class UserPayment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String type;
+	private String cardType;
 	private String cardName;
 	private String cardNumber;
 	private int expiryMonth;
@@ -19,9 +21,10 @@ public class UserPayment {
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
+	@JsonIgnore
 	private User user;
 	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userPayment",orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userPayment", orphanRemoval = true)
 	private UserBilling userBilling;
 
 	public Long getId() {
@@ -32,12 +35,12 @@ public class UserPayment {
 		this.id = id;
 	}
 
-	public String getType() {
-		return type;
+	public String getCardType() {
+		return cardType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCardType(String type) {
+		this.cardType = type;
 	}
 
 	public String getCardName() {

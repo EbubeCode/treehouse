@@ -8,7 +8,6 @@ public class BillingAddress {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String BillingAddressName;
 	private String BillingAddressStreet;
 	private String BillingAddressCity;
 	private String BillingAddressState;
@@ -24,14 +23,6 @@ public class BillingAddress {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getBillingAddressName() {
-		return BillingAddressName;
-	}
-
-	public void setBillingAddressName(String billingAddressName) {
-		BillingAddressName = billingAddressName;
 	}
 
 	public String getBillingAddressStreet() {
