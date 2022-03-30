@@ -10,7 +10,7 @@
         th:text="${shoppingCart.user.firstName}"></span>'S Shopping Cart</h1>
 
 <div class="grid md:grid-cols-3">
-    <div class="md:col-start-1 md:col-end-3 md:border-r-2 md:border-teal-200">
+    <div class="md:col-start-1 md:col-end-3 md:border-r-2 md:border-teal-200 ">
         <div th:each="item: ${cartItems}">
             <div th:id="cart + ${item.id}" class="pt-3 px-10" th:object="${item.product}">
                 <div class="grid md:grid-cols-2 shadow-lg shadow-teal-400 p-4 rounded-lg border-4 border-solid gap-3">

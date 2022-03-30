@@ -35,13 +35,22 @@ $(document).ready(function () {
             alert("error loading resource.")
         })
     })
+
+    $('#ship-bill').on('click', function () {
+        if ($(this).prop('checked')) {
+            $('#userBillingZipcode').val($('#userShippingZipcode').val())
+            $('#userBillingStreet').val($('#userShippingStreet').val())
+            $('#userBillingCity').val($('#userShippingCity').val())
+            $('#userBillingState').val($('#userShippingState').val())
+            $('#userBillingCountry').val($('#userShippingCountry').val())
+        }
+    })
 })
 
 function switchShipping(userShipping) {
     $('#userShippingZipcode').val(userShipping.userShippingZipcode);
     $('#userShippingStreet').val(userShipping.userShippingStreet);
     $('#userShippingState').val(userShipping.userShippingState);
-    $('#userShippingName').val(userShipping.userShippingName);
     $('#userShippingCountry').val(userShipping.userShippingCountry);
     $('#userShippingCity').val(userShipping.userShippingCity);
 }
@@ -59,4 +68,5 @@ function switchPayment(userPayment, userBilling) {
     $('#userBillingCity').val(userBilling.userBillingCity)
     $('#userBillingState').val(userBilling.userBillingState)
     $('#userBillingCountry').val(userBilling.userBillingCountry)
+    $('#ship-bill').prop('checked', false   )
 }

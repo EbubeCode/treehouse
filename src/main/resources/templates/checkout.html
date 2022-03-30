@@ -27,9 +27,9 @@
                 </p>
             </div>
         </div>
-        <div class="md:col-start-3 md:col-end-8">
+        <div class="md:col-start-3 md:col-end-8 row-start-1">
             <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg">Items Summary</summary>
+                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Items Summary</summary>
                 <div class="flex flex-col mt-4">
                     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
@@ -94,7 +94,7 @@
 
             </details>
             <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg">Shipping Address</summary>
+                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Shipping Address</summary>
                 <div class="flex">
                     <div class="mt-3 ml-3">
                         <div class="form-check" th:each="address: ${userShippingList}">
@@ -224,16 +224,16 @@
                 </div>
             </details>
             <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg">Payment</summary>
+                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Payment</summary>
                 <div class="flex">
                     <div class="mt-3 ml-3">
-                        <div class="form-check" th:each="payment: ${userPaymentList}">
+                        <div class="form-check" th:each="paymnt: ${userPaymentList}">
                             <input class="pRadio form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600
 								checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-								bg-contain float-left mr-2 cursor-pointer" type="radio" name="payment" th:id="payment + ${payment.id}"
-                                   th:checked="${payment.defaultPayment}">
-                            <label class="form-check-label inline-block text-gray-800" th:for="payment + ${payment.id}"
-                                   th:text="${payment.cardName}"></label>
+								bg-contain float-left mr-2 cursor-pointer" type="radio" name="payment" th:id="payment + ${paymnt.id}"
+                                   th:checked="${paymnt.defaultPayment}">
+                            <label class="form-check-label inline-block text-gray-800" th:for="payment + ${paymnt.id}"
+                                   th:text="${paymnt.cardName}"></label>
                         </div>
 
                     </div>
@@ -363,7 +363,19 @@
                 </div>
             </details>
             <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg">Billing Address</summary>
+                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Billing Address</summary>
+                <div class="flex justify-start p-4">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600
+                             checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
+                              float-left mr-2 cursor-pointer" type="checkbox" value="" id="ship-bill">
+                            <label class="form-check-label inline-block text-gray-800" for="ship-bill">
+                                Same as Shipping
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div th:object="${billingAddress}" class="py-4 px-6 lg:px-10">
                     <div class="flex justify-left">
                         <div class="mb-6 xl:w-96">
