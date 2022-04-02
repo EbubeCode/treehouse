@@ -45,6 +45,22 @@ $(document).ready(function () {
             $('#userBillingCountry').val($('#userShippingCountry').val())
         }
     })
+
+    $('.s-radio').on('click', function () {
+        if ($(this).prop('checked')) {
+            $('#shipMethod').val($(this).val());
+            if($(this).val() === 'Air') {
+                $('#shipping-price').text("30.00");
+                let total = 30.00 + parseFloat($("#order-total").text()) + parseFloat($("#tax").text());
+                $("#grand-total").text(total);
+            }
+            else {
+                $('#shipping-price').text("10.00");
+                let total = 10.00 + parseFloat($("#order-total").text()) + parseFloat($("#tax").text());
+                $("#grand-total").text(total);
+            }
+        }
+    })
 })
 
 function switchShipping(userShipping) {

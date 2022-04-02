@@ -6,13 +6,24 @@
 <body>
 <div th:replace="common/header :: navbar"></div>
 
-<form>
+<form th:action="@{/pay}" th:method="POST">
+    <h6 class="text-red-600 text-lg font-bold text-center" th:hidden="${error == null}" th:text="${error}"></h6>
+
     <div class="grid md:grid-cols-7 ">
         <div class="p-2 md:pt-10 border-r-4 border-solid border-teal-100 md:col-start-1 md:col-end-3">
             <div>
                 <h1 class="py-6 px-2 text-3xl font-bold font-mono text-teal-800">Order Summary</h1>
-                <p class="font-bold px-2 text-lg">Order total: £<span
+                <p class="font-bold px-2 text-lg">Order total: £<span id="order-total"
                         th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal}: ${shoppingCart.discount}"></span>
+                </p>
+                <p class="font-semibold pl-20 text-sm">+ tax: £<span id="tax"
+                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal * 0.1}: ${shoppingCart.discount * 0.1}"></span>
+                </p>
+                <p class="font-semibold pl-20 text-sm">+ shipping: £<span id="shipping-price"
+                        th:text="${10.00}"></span>
+                </p>
+                <p class="font-bold px-2 text-lg">Grand total: £<span id="grand-total"
+                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal+ shoppingCart.GrandTotal * 0.1 + 10.00}: ${shoppingCart.discount + shoppingCart.discount * 0.1 + 10.00}"></span>
                 </p>
             </div>
             <div id="check-out" class="flex justify-around my-4">
@@ -68,7 +79,7 @@
                                         </p></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a
                                                 class="block hover:text-teal-500 text-teal-900 cursor-pointer"
-                                                th:href="@{/admin/productInfo(id=${item.product.id})}"><span
+                                                th:href="@{/productDetail(id=${item.product.id})}"><span
                                                 th:text="${item.product.name}"></span></a></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
                                                 class="block text-teal-900"><span
@@ -223,274 +234,27 @@
 
                 </div>
             </details>
-            <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Payment</summary>
-                <div class="flex">
-                    <div class="mt-3 ml-3">
-                        <div class="form-check" th:each="paymnt: ${userPaymentList}">
-                            <input class="pRadio form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600
-								checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center
-								bg-contain float-left mr-2 cursor-pointer" type="radio" name="payment" th:id="payment + ${paymnt.id}"
-                                   th:checked="${paymnt.defaultPayment}">
-                            <label class="form-check-label inline-block text-gray-800" th:for="payment + ${paymnt.id}"
-                                   th:text="${paymnt.cardName}"></label>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div th:object="${payment}" class="py-4 px-6 lg:px-10">
-                    <div class="form-group mb-6">
-                        <label for="holderName" class="block text-lg text-gray-500">Holder Name</label>
-                        <input type="text" id="holderName" class="form-control block
-                        w-full
-                        px-3
-                        py-1.5
-                        text-base
-                        font-normal
-                        text-gray-700
-                        bg-white bg-clip-padding
-                        border border-solid border-gray-300
-                        rounded
-                        transition
-                        ease-in-out
-                        m-0
-                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{holderName}" placeholder="Holder Name">
-                    </div>
-                    <div class="flex justify-left">
-                        <div class="mb-6 xl:w-96">
-                            <label for="type" class="block text-lg text-gray-500">Card Type</label>
-                            <select th:field="*{type}" id="type" class=" block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
-                                <option th:selected="(*{type}=='Master Card')" selected value="Master Card">Master Card</option>
-                                <option th:selected="(*{type}=='Visa')" value="Visa">Visa</option>
-                                <option th:selected="(*{type}=='Verve')" value="Verve">Verve</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group mb-6">
-                        <label for="cardNumber" class="block text-lg text-gray-500">Card Number</label>
-                        <input type="text" id="cardNumber"
-                               class="form-control block appearance-none
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{cardNumber}" placeholder="Card Number">
+            <div class="flex">
+                <div class="mt-3 ml-3">
+                    <div class="form-check">
+                        <input class="s-radio form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600
+								checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2
+								cursor-pointer" type="radio" name="shipMethod" id="ground-shipping"  value="Ground" checked>
+                        <label class="form-check-label inline-block text-gray-800" for="ground-shipping">Ground Shipping</label>
                     </div>
 
-                    <div class="form-group mb-6">
-                        <label for="cvc" class="block text-lg text-gray-500">cvc</label>
-                        <input type="number" step="any" id="cvc"
-                               class="form-control block appearance-none
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{cvc}" placeholder="cvc">
+                    <div class="form-check">
+                        <input class="s-radio form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600
+								checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2
+								cursor-pointer" type="radio" name="shipMethod" id="air-shipping" value="Air">
+                        <label class="form-check-label inline-block text-gray-800" for="air-shipping">Air Shipping</label>
                     </div>
 
-                    <div class="form-group mb-6">
-                        <label for="expiryMonth" class="block text-lg text-gray-500">Expiry Date</label>
-                        <div class="flex">
-                            <input type="number" id="expiryMonth"
-                                   class="form-control block appearance-none
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                   th:field="*{expiryMonth}"
-                                   placeholder="Expiry Month">
-                            <span class="text-3xl text-teal-700"> / </span>
-                            <input type="number" step="any" id="expiryYear"
-                                   class="form-control block appearance-none
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                   th:field="*{expiryYear}"
-                                   placeholder="Expiry Year">
-                        </div>
-
-                    </div>
-                </div>
-            </details>
-            <details class="w-full">
-                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg cursor-pointer">Billing Address</summary>
-                <div class="flex justify-start p-4">
-                    <div>
-                        <div class="form-check">
-                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600
-                             checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
-                              float-left mr-2 cursor-pointer" type="checkbox" value="" id="ship-bill">
-                            <label class="form-check-label inline-block text-gray-800" for="ship-bill">
-                                Same as Shipping
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div th:object="${billingAddress}" class="py-4 px-6 lg:px-10">
-                    <div class="flex justify-left">
-                        <div class="mb-6 xl:w-96">
-                            <label for="userBillingCountryuserBillingState" class="block text-lg text-gray-500">Shipping Country</label>
-                            <select th:field="*{billingAddressCountry}" id="userBillingCountryuserBillingState" class=" block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
-                                <option th:selected="(*{billingAddressCountry}=='UK')" selected value="UK">UK</option>
-                                <option th:selected="(*{billingAddressCountry}=='US')" value="US">US</option>
-                                <option th:selected="(*{billingAddressCountry}=='Nigeria')" value="Nigeria">Nigeria
-                                </option>
-                                <option th:selected="(*{billingAddressCountry}=='Ghana')" value="Ghana">Ghana</option>
-                                <option th:selected="(*{billingAddressCountry}=='France')" value="France">France
-                                </option>
-                                <option th:selected="(*{billingAddressCountry}=='Germany')" value="Germany">Germany
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group mb-6">
-                        <label for="userBillingState" class="block text-lg text-gray-500">State</label>
-                        <input type="text" id="userBillingState"
-                               class="form-control block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{billingAddressState}" placeholder="State">
-                    </div>
-
-                    <div class="form-group mb-6">
-                        <label for="userBillingCity" class="block text-lg text-gray-500">City</label>
-                        <input type="text" step="any" id="userBillingCity"
-                               class="form-control block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{billingAddressCity}" placeholder="City">
-                    </div>
-
-                    <div class="form-group mb-6">
-                        <label for="userBillingStreet" class="block text-lg text-gray-500">Street</label>
-                        <input type="text" step="any" id="userBillingStreet"
-                               class="form-control block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{billingAddressStreet}"
-                               placeholder="Street">
-                    </div>
-
-
-                    <div class="form-group mb-6">
-                        <label for="userBillingZipcode" class="block text-lg text-gray-500">Zipcode</label>
-                        <input type="text" step="any" id="userBillingZipcode"
-                               class="form-control block
-                            w-full
-                            px-3
-                            py-1.5
-                            text-base
-                            font-normal
-                            text-gray-700
-                            bg-white bg-clip-padding
-                            border border-solid border-gray-300
-                            rounded
-                            transition
-                            ease-in-out
-                            m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                               th:field="*{billingAddressZipcode}"
-                               placeholder="Zipcode">
-                    </div>
+                    <input type="hidden" th:field="${shippingMethod}" id="shipMethod">
 
                 </div>
-            </details>
+            </div>
+
         </div>
     </div>
 </form>

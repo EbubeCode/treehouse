@@ -1,74 +1,96 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
-<head th:replace="common/header :: common-header" />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common-header"></head>
 
 <body>
-	<div th:replace="common/header :: navbar" />
+<div th:replace="common/header :: navbar"></div>
 
-	<div class="container">
-		<div class="row" style="margin-bottom: -100px;">
-			<div class="col-xs-8">
-				<h2 class="section-headline">
-					<span>User Account</span>
-				</h2>
-			</div>
-			<div class="col-xs-4">
-				<img src="/image/logo.png" class="img-responsive" />
-			</div>
-		</div>
-		<hr
-			style="position: absolute; width: 100%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;" />
-		<img class="img-responsive" src="/image/wood.png"
-			style="margin-top: -75px;" />
+<div class="mt-4 p-5">
+    <div class="border-solid shadow-lg bg-teal-50 p-4 mb-4">
+        <h3 class="flex justify-center p-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>
+                Thank you, your order has been
+            placed.
+            </span>
 
-		<div class="row" style="margin-top: 10px;">
-			<div class="col-xs-12">
-				<div class="alert alert-success">
-					<h3>
-						<i class="fa fa-check" aria-hidden="true"
-							style="color: limegreen;"></i> Thank you, your order has been
-						placed.
-					</h3>
-					<h4>
-						The estimated delivery date is <span
-							th:text="${estimatedDeliveryDate}"></span>
-					</h4>
-				</div>
+        </h3>
+        <h4>
+            The estimated delivery date is <span
+                th:text="${estimatedDeliveryDate}"></span>
+        </h4>
+    </div>
 
-				<h3>List of Items</h3>
-				<div class="row" th:each="cartItem : ${cartItemList}">
-					<hr />
-					<div class="col-xs-2"></div>
-					<div class="col-xs-2">
+    <h3 class="font-bold text-lg text-teal-700">List of Items</h3>
+    <div class="flex flex-col mt-4">
+        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="overflow-hidden">
+                    <table class="min-w-full">
+                        <thead class="bg-white border-b">
+                        <tr>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                #
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Name
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Category
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Price(£)
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Shipping weight(kg)
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Qty
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Subtotal(£)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-th-each="item: ${cartItemList}"
+                            th:class="${itemStat.odd}? 'bg-gray-100 border-b' : 'bg-white border-b'">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><p
+                                    class="block text-teal-900"><span th:text="${itemStat.count}"></span>
+                            </p></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><a
+                                    class="block hover:text-teal-500 text-teal-900 cursor-pointer"
+                                    th:href="@{/productDetail(id=${item.product.id})}"><span
+                                    th:text="${item.product.name}"></span></a></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                    class="block text-teal-900"><span
+                                    th:text="${item.product.category}"></span></p></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                    class="block text-teal-900"><span
+                                    th:text="${item.product.price}"></span></p></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                    class="block text-teal-900"><span
+                                    th:text="${item.product.shippingWeight}"></span></p></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                    class="block text-teal-900"><span th:text="${item.qty}"></span></p></td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                    class="block text-teal-900"><span th:text="${item.subtotal}"></span></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						<a th:href="@{/bookDetail(id=${cartItem.book.id})}"> <img
-							class="img-responsive shelf-book"
-							th:src="#{adminPath}+@{/image/book/}+${cartItem.book.id}+'.png'"
-							style="width: 70px;" />
-						</a>
-					</div>
-					<div class="col-xs-6">
-						<div style="margin-left: 50px;">
-							<a th:href="@{/bookDetail?id=}+${cartItem.book.id}"><h4
-									th:text="${cartItem.book.title}"></h4></a>
-						</div>
-					</div>
+</div>
 
-					<div class="col-xs-2">
-						<h5 style="color: #db3208; font-size: large;">
-							$<span th:text="${cartItem.book.ourPrice}"
-								th:style="${cartItem.book.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>
-						</h5>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end of container -->
+<div th:replace="common/header :: footer"></div>
 
-	<div th:replace="common/header :: footer"/>
-
-	<div th:replace="common/header :: body-bottom-scripts" />
+<div th:replace="common/header :: body-bottom-scripts"></div>
 </body>
 </html>

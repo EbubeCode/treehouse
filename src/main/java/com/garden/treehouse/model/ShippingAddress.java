@@ -25,7 +25,6 @@ public class ShippingAddress {
 		this.id = id;
 	}
 
-
 	public String getShippingAddressStreet() {
 		return ShippingAddressStreet;
 	}

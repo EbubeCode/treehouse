@@ -1,6 +1,5 @@
 package com.garden.treehouse.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.garden.treehouse.model.security.UserRole;
 
 import javax.persistence.*;
@@ -25,7 +24,6 @@ public class User {
     private String matchingPassword;
 
 
-
     @Transient
     private String oldPassword;
 
@@ -38,9 +36,6 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<UserShipping> userShippingList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<UserPayment> userPaymentList;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orderList;
@@ -109,13 +104,6 @@ public class User {
         this.userShippingList = userShippingList;
     }
 
-    public List<UserPayment> getUserPaymentList() {
-        return userPaymentList;
-    }
-
-    public void setUserPaymentList(List<UserPayment> userPaymentList) {
-        this.userPaymentList = userPaymentList;
-    }
 
     public ShoppingCart getShoppingCart() {
         return shoppingCart;

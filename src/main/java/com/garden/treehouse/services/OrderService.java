@@ -3,12 +3,14 @@ package com.garden.treehouse.services;
 import com.garden.treehouse.model.*;
 import com.garden.treehouse.repos.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
 
 
 @Service
+@Transactional
 public class OrderService{
 
 	private final OrderRepository orderRepository;
@@ -19,16 +21,15 @@ public class OrderService{
 		this.cartItemService = cartItemService;
 	}
 
-	public synchronized Order createOrder(ShoppingCart shoppingCart,
+	public Order createOrder(ShoppingCart shoppingCart,
 										  ShippingAddress shippingAddress,
-										  BillingAddress billingAddress,
-										  Payment payment,
 										  String shippingMethod,
 										  User user) {
+		var opOrder = orderRepository.findOrderByUserAndOrderStatus(user, "pending");
+		if(opOrder.isPresent())
+			return opOrder.get();
 		Order order = new Order();
-		order.setBillingAddress(billingAddress);
-		order.setOrderStatus("created");
-		order.setPayment(payment);
+		order.setOrderStatus("pending");
 		order.setShippingAddress(shippingAddress);
 		order.setShippingMethod(shippingMethod);
 		
@@ -44,8 +45,6 @@ public class OrderService{
 		order.setOrderDate(Calendar.getInstance().getTime());
 		order.setOrderTotal(shoppingCart.getGrandTotal());
 		shippingAddress.setOrder(order);
-		billingAddress.setOrder(order);
-		payment.setOrder(order);
 		order.setUser(user);
 		order = orderRepository.save(order);
 		
@@ -54,6 +53,10 @@ public class OrderService{
 	
 	public Order findById(Long id) {
 		return orderRepository.findById(id).orElse(null);
+	}
+
+	public Order save(Order order) {
+		return orderRepository.save(order);
 	}
 
 }

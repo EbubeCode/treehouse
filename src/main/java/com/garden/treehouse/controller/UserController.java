@@ -2,10 +2,11 @@ package com.garden.treehouse.controller;
 
 import com.garden.treehouse.events.ForgotPasswordEvent;
 import com.garden.treehouse.model.User;
-import com.garden.treehouse.model.UserBilling;
-import com.garden.treehouse.model.UserPayment;
 import com.garden.treehouse.model.UserShipping;
-import com.garden.treehouse.services.*;
+import com.garden.treehouse.services.OrderService;
+import com.garden.treehouse.services.TokenService;
+import com.garden.treehouse.services.UserService;
+import com.garden.treehouse.services.UserShippingService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,10 +30,12 @@ public class UserController {
     private final UserDetailsService userSecurityService;
     private final OrderService orderService;
     private final UserShippingService userShippingService;
-    private final UserPaymentService userPaymentService;
 
 
-    public UserController(ApplicationEventPublisher applicationEventPublisher, UserService userService, TokenService tokenService, PasswordEncoder passwordEncoder, UserDetailsService userSecurityService, OrderService orderService, UserShippingService userShippingService, UserPaymentService userPaymentService) {
+    public UserController(ApplicationEventPublisher applicationEventPublisher,
+                          UserService userService, TokenService tokenService,
+                          PasswordEncoder passwordEncoder, UserDetailsService userSecurityService,
+                          OrderService orderService, UserShippingService userShippingService) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.userService = userService;
         this.tokenService = tokenService;
@@ -40,7 +43,6 @@ public class UserController {
         this.userSecurityService = userSecurityService;
         this.orderService = orderService;
         this.userShippingService = userShippingService;
-        this.userPaymentService = userPaymentService;
     }
 
 
@@ -289,79 +291,6 @@ public class UserController {
     }
 
 
-    @GetMapping("/myPayment")
-    public String myPayment(Model model, Principal principal) {
-        var user = userService.findByEmail(principal.getName());
-        var payments = user.getUserPaymentList();
-        model.addAttribute("payments", payments);
-
-        return "myPayment";
-    }
-
-    @GetMapping("/addPayment")
-    public String updatePayment(@RequestParam(name = "id", required = false) Long id, Model model) {
-        if (id == null) {
-            var userPayment = new UserPayment();
-            var userBilling = new UserBilling();
-            model.addAttribute("userPayment", userPayment);
-            model.addAttribute("userBilling", userBilling);
-            model.addAttribute("title", "Add Payment");
-            model.addAttribute("id", 0);
-            return "addPayment";
-
-        }
-
-        var userPayment = userPaymentService.findById(id);
-        model.addAttribute("userPayment", userPayment);
-        model.addAttribute("userBilling", userPayment.getUserBilling());
-        model.addAttribute("title", "Update Payment");
-        model.addAttribute("id", id);
-        return "addPayment";
-    }
-
-    @PostMapping("/addPayment")
-    public String add_updatePayment(@RequestParam(name = "id") Long id,
-                                     @ModelAttribute UserPayment userPayment,
-                                     @ModelAttribute UserBilling userBilling,
-                                     Principal principal) {
-        var opPayment = userPaymentService.findById(id);
-        var user = userService.findByEmail(principal.getName());
-        if (opPayment != null) {
-            var oldUserBilling = opPayment.getUserBilling();
-            convertPayment(opPayment, userPayment, oldUserBilling, userBilling);
-            userService.updateUserBilling(oldUserBilling, opPayment, user, opPayment.isDefaultPayment());
-        }
-        else
-            userService.updateUserBilling(userBilling, userPayment, user, userPayment.isDefaultPayment());
-
-        return "redirect:/myPayment";
-    }
-
-    private void convertPayment(UserPayment old, UserPayment newPayment, UserBilling oldBilling, UserBilling newBilling) {
-        old.setDefaultPayment(newPayment.isDefaultPayment());
-        old.setHolderName(newPayment.getHolderName());
-        old.setCardName(newPayment.getCardName());
-        old.setCardNumber(newPayment.getCardNumber());
-        old.setCardType(newPayment.getCardType());
-        old.setExpiryMonth(newPayment.getExpiryMonth());
-        old.setExpiryYear(newPayment.getExpiryYear());
-        old.setCvc(newPayment.getCvc());
-
-        oldBilling.setUserBillingStreet(newBilling.getUserBillingStreet());
-        oldBilling.setUserBillingCity(newBilling.getUserBillingCity());
-        oldBilling.setUserBillingState(newBilling.getUserBillingState());
-        oldBilling.setUserBillingCountry(newBilling.getUserBillingCountry());
-        oldBilling.setUserBillingZipcode(newBilling.getUserBillingZipcode());
-    }
-
-    @DeleteMapping("/removeUserPayment")
-    @ResponseBody
-    public Long removeUserPayment(@RequestParam("id") Long paymentId) {
-
-        userPaymentService.deleteById(paymentId);
-        return paymentId;
-    }
-
     @GetMapping(value = "/userShipping/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public UserShipping getUserShipping(@PathVariable Long id, Principal principal){
@@ -373,14 +302,4 @@ public class UserController {
                 .orElse(null);
     }
 
-    @GetMapping(value = "/userPayment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public UserPayment getUserPayment(@PathVariable Long id, Principal principal){
-        var user = userService.findByEmail(principal.getName());
-
-        return user.getUserPaymentList().stream()
-                .filter(s -> s.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
 }

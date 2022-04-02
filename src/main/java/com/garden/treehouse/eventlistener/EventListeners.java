@@ -2,6 +2,7 @@ package com.garden.treehouse.eventlistener;
 
 import com.garden.treehouse.events.CreateUserEvent;
 import com.garden.treehouse.events.ForgotPasswordEvent;
+import com.garden.treehouse.events.OrderCreated;
 import com.garden.treehouse.model.VerificationToken;
 import com.garden.treehouse.repos.VerificationTokenRepo;
 import com.garden.treehouse.services.UserService;
@@ -35,7 +36,7 @@ public class EventListeners {
         var user = userEvent.user();
         var verificationToken = new VerificationToken();
         verificationToken.setUserEmail(user.getEmail());
-        verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis()), 24));
+        verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis())));
         verificationToken.setTokenId(UUID.randomUUID().toString());
         verificationToken = tokenRepo.save(verificationToken);
         var tokenId = verificationToken.getTokenId();
@@ -46,10 +47,10 @@ public class EventListeners {
 
     }
 
-    private Date addHoursToDate(Date date, int hours) {
+    private Date addHoursToDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        calendar.add(Calendar.HOUR_OF_DAY, 24);
         return calendar.getTime();
     }
 
@@ -59,7 +60,7 @@ public class EventListeners {
 
         var verificationToken = new VerificationToken();
         verificationToken.setUserEmail(userEmail);
-        verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis()), 24));
+        verificationToken.setExpiryDate(addHoursToDate(new Date(System.currentTimeMillis())));
         verificationToken.setTokenId(UUID.randomUUID().toString());
         verificationToken = tokenRepo.save(verificationToken);
         var tokenId = verificationToken.getTokenId();
@@ -68,5 +69,12 @@ public class EventListeners {
 
         mailSender.send(email);
 
+    }
+
+    @EventListener
+    public void orderCreated(OrderCreated event) {
+        var email = mailConstructor.createEmailUserForOrderCreated(event.order().getId(),
+                event.user().getEmail());
+        mailSender.send(email);
     }
 }

@@ -22,10 +22,7 @@ public class Product {
 	private String description;
 	private int inStockNumber;
 
-
 	private String imageUrl;
-
-
 
 	@Transient
 	private MultipartFile productImage;
@@ -92,8 +89,6 @@ public class Product {
 	public void setInStockNumber(int inStockNumber) {
 		this.inStockNumber = inStockNumber;
 	}
-
-
 
 	public String getName() {
 		return name;

@@ -1,11 +1,12 @@
 package com.garden.treehouse.services;
 
 import com.garden.treehouse.events.CreateUserEvent;
-import com.garden.treehouse.model.*;
+import com.garden.treehouse.model.ShoppingCart;
+import com.garden.treehouse.model.User;
+import com.garden.treehouse.model.UserShipping;
 import com.garden.treehouse.model.security.Role;
 import com.garden.treehouse.model.security.UserRole;
 import com.garden.treehouse.repos.RoleRepository;
-import com.garden.treehouse.repos.UserPaymentRepository;
 import com.garden.treehouse.repos.UserRepository;
 import com.garden.treehouse.repos.UserShippingRepository;
 import org.slf4j.Logger;
@@ -28,19 +29,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final UserPaymentRepository userPaymentRepository;
-    private final UserShippingRepository userShippingRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-                       UserPaymentRepository userPaymentRepository, UserShippingRepository userShippingRepository,
                        PasswordEncoder passwordEncoder, ApplicationEventPublisher publisher) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.userPaymentRepository = userPaymentRepository;
-        this.userShippingRepository = userShippingRepository;
         this.passwordEncoder = passwordEncoder;
         this.publisher = publisher;
     }
@@ -73,7 +69,6 @@ public class UserService {
         user.setShoppingCart(shoppingCart);
 
         user.setUserShippingList(new ArrayList<UserShipping>());
-        user.setUserPaymentList(new ArrayList<UserPayment>());
 
         var localUser = userRepository.save(user);
         publisher.publishEvent(new CreateUserEvent(localUser));
@@ -117,7 +112,6 @@ public class UserService {
             admin.setShoppingCart(shoppingCart);
         }
             admin.setUserShippingList(new ArrayList<UserShipping>());
-            admin.setUserPaymentList(new ArrayList<UserPayment>());
 
 
         userRepository.save(admin);
@@ -129,20 +123,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user, boolean def) {
-        userPayment.setUser(user);
-        userPayment.setUserBilling(userBilling);
-        if (def) {
-            var defaultPayment = user.getUserPaymentList().stream()
-                    .filter(UserPayment::isDefaultPayment)
-                    .findFirst();
-            defaultPayment.ifPresent(payment -> payment.setDefaultPayment(false));
-            userPayment.setDefaultPayment(true);
-        }
-        userBilling.setUserPayment(userPayment);
-        user.getUserPaymentList().add(userPayment);
-        save(user);
-    }
 
     public void updateUserShipping(UserShipping userShipping, User user, boolean def) {
         userShipping.setUser(user);
@@ -158,32 +138,6 @@ public class UserService {
         save(user);
     }
 
-    public void setUserDefaultPayment(Long userPaymentId, User user) {
-        List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
 
-        for (UserPayment userPayment : userPaymentList) {
-            if (userPaymentId.equals(userPayment.getId())) {
-                userPayment.setDefaultPayment(true);
-                userPaymentRepository.save(userPayment);
-            } else {
-                userPayment.setDefaultPayment(false);
-                userPaymentRepository.save(userPayment);
-            }
-        }
-    }
-
-    public void setUserDefaultShipping(Long userShippingId, User user) {
-        List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
-
-        for (UserShipping userShipping : userShippingList) {
-            if (userShipping.getId().equals(userShippingId)) {
-                userShipping.setUserShippingDefault(true);
-                userShippingRepository.save(userShipping);
-            } else {
-                userShipping.setUserShippingDefault(false);
-                userShippingRepository.save(userShipping);
-            }
-        }
-    }
 
 }

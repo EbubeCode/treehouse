@@ -1,59 +1,51 @@
 package com.garden.treehouse.controller;
 
+import com.garden.treehouse.events.OrderCreated;
 import com.garden.treehouse.model.*;
+import com.garden.treehouse.payment.Payload;
+import com.garden.treehouse.payment.PaymentService;
 import com.garden.treehouse.services.*;
-import com.garden.treehouse.utility.MailConstructor;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 
 @Controller
 public class CheckoutController {
 
 	private final ShippingAddress shippingAddress = new ShippingAddress();
-	private final BillingAddress billingAddress = new BillingAddress();
-	private final Payment payment = new Payment();
-	
-	private final JavaMailSender mailSender;
-	private final MailConstructor mailConstructor;
+
 	private final UserService userService;
 	private final CartItemService cartItemService;
-	private final ShoppingCartService shoppingCartService;
 	private final ShippingAddressService shippingAddressService;
-	private final BillingAddressService billingAddressService;
 	private final PaymentService paymentService;
-	private final UserShippingService userShippingService;
-	private final UserPaymentService userPaymentService;
 	private final OrderService orderService;
+	private final ShoppingCartService shoppingCartService;
+	private final ApplicationEventPublisher eventPublisher;
 
-	public CheckoutController(JavaMailSender mailSender, MailConstructor mailConstructor, UserService userService,
-							  CartItemService cartItemService, ShoppingCartService shoppingCartService,
-							  ShippingAddressService shippingAddressService, BillingAddressService billingAddressService,
-							  PaymentService paymentService, UserShippingService userShippingService,
-							  UserPaymentService userPaymentService, OrderService orderService) {
-		this.mailSender = mailSender;
-		this.mailConstructor = mailConstructor;
+	public CheckoutController(UserService userService,
+							  CartItemService cartItemService, ShippingAddressService shippingAddressService,
+							  PaymentService paymentService, OrderService orderService, ShoppingCartService shoppingCartService, ApplicationEventPublisher eventPublisher) {
 		this.userService = userService;
 		this.cartItemService = cartItemService;
-		this.shoppingCartService = shoppingCartService;
 		this.shippingAddressService = shippingAddressService;
-		this.billingAddressService = billingAddressService;
 		this.paymentService = paymentService;
-		this.userShippingService = userShippingService;
-		this.userPaymentService = userPaymentService;
 		this.orderService = orderService;
+		this.shoppingCartService = shoppingCartService;
+		this.eventPublisher = eventPublisher;
 	}
 
 	@GetMapping("/checkout")
 	public String checkout(
 			@RequestParam("id") Long cartId,
+			@RequestParam(name = "error", required = false) Boolean error,
 			Model model, Principal principal
 			){
 		User user = userService.findByEmail(principal.getName());
@@ -64,11 +56,9 @@ public class CheckoutController {
 		
 		var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 		var userShippingList = user.getUserShippingList();
-		var userPaymentList = user.getUserPaymentList();
-		
+
 		model.addAttribute("userShippingList", userShippingList);
-		model.addAttribute("userPaymentList", userPaymentList);
-		
+
 
 
 		for(UserShipping userShipping : userShippingList) {
@@ -76,162 +66,128 @@ public class CheckoutController {
 				shippingAddressService.setByUserShipping(userShipping, shippingAddress);
 			}
 		}
-		
-		for (UserPayment userPayment : userPaymentList) {
-			if(userPayment.isDefaultPayment()) {
-				paymentService.setByUserPayment(userPayment, payment);
-				billingAddressService.setByUserBilling(userPayment.getUserBilling(), billingAddress);
-			}
-		}
+
 
 		addAttributes(model, user, cartItemList);
 
-
+		model.addAttribute("shippingMethod", "Ground");
+		if(error == null)
+			model.addAttribute("error", "Couldn't make payment.");
+		else if(error)
+		model.addAttribute("error", "Missing some required information");
+		else
+		model.addAttribute("error", null);
 		return "checkout";
 		
 	}
 
 
 
-	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
+	@RequestMapping("/pay")
 	public String checkoutPost(@ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
-			@ModelAttribute("billingAddress") BillingAddress billingAddress, @ModelAttribute("payment") Payment payment,
-			@ModelAttribute("billingSameAsShipping") String billingSameAsShipping,
-			@ModelAttribute("shippingMethod") String shippingMethod, Principal principal, Model model) {
+						@ModelAttribute("shippingMethod") String shippingMethod,
+							   Principal principal, Model model, HttpServletRequest request) throws Exception {
 		ShoppingCart shoppingCart = userService.findByEmail(principal.getName()).getShoppingCart();
 
-		List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
-		model.addAttribute("cartItemList", cartItemList);
-
-		if (billingSameAsShipping.equals("true")) {
-			billingAddress.setBillingAddressStreet(shippingAddress.getShippingAddressStreet());
-			billingAddress.setBillingAddressCity(shippingAddress.getShippingAddressCity());
-			billingAddress.setBillingAddressState(shippingAddress.getShippingAddressState());
-			billingAddress.setBillingAddressCountry(shippingAddress.getShippingAddressCountry());
-			billingAddress.setBillingAddressZipcode(shippingAddress.getShippingAddressZipcode());
+		if (request.getMethod().contentEquals("GET")) {
+			//This happens in case of a cancelling payment. This redirects to the checkout page.
+			return "redirect:checkout?id="+ shoppingCart.getId();
 		}
 
 		if (shippingAddress.getShippingAddressStreet().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
 				|| shippingAddress.getShippingAddressState().isEmpty()
-				|| shippingAddress.getShippingAddressZipcode().isEmpty() || payment.getCardNumber().isEmpty()
-				|| payment.getCvc() == 0 || billingAddress.getBillingAddressStreet().isEmpty()
-				|| billingAddress.getBillingAddressCity().isEmpty() || billingAddress.getBillingAddressState().isEmpty()
-				|| billingAddress.getBillingAddressZipcode().isEmpty())
-			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
-		
-		User user = userService.findByEmail(principal.getName());
-		
-		Order order = orderService.createOrder(shoppingCart, shippingAddress, billingAddress, payment, shippingMethod, user);
-		
-		mailSender.send(mailConstructor.constructOrderConfirmationEmail(user, order, Locale.ENGLISH));
-		
-		shoppingCartService.clearShoppingCart(shoppingCart);
-		
-		LocalDate today = LocalDate.now();
-		LocalDate estimatedDeliveryDate;
-		
-		if (shippingMethod.equals("groundShipping")) {
-			estimatedDeliveryDate = today.plusDays(5);
-		} else {
-			estimatedDeliveryDate = today.plusDays(3);
+				|| shippingAddress.getShippingAddressZipcode().isEmpty())
+		{
+			return "redirect:checkout?id="+ shoppingCart.getId() +"&error=true";
 		}
-		
-		model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
-		
-		return "orderSubmittedPage";
-	}
-	
-	@RequestMapping("/setShippingAddress")
-	public String setShippingAddress(
-			@RequestParam("userShippingId") Long userShippingId,
-			Principal principal, Model model
-			) {
+
 		User user = userService.findByEmail(principal.getName());
-		UserShipping userShipping = userShippingService.findById(userShippingId);
 		
-		if(!userShipping.getUser().getId().equals(user.getId())) {
-			return "badRequestPage";
-		} else {
-			shippingAddressService.setByUserShipping(userShipping, shippingAddress);
-			
-			List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-			List<UserShipping> userShippingList = user.getUserShippingList();
-			List<UserPayment> userPaymentList = user.getUserPaymentList();
+		Order order = orderService.createOrder(shoppingCart, shippingAddress, shippingMethod, user);
 
-			addAttributes(model, user, cartItemList);
+		var amount = 0;
+		var cartTotal = shoppingCart.getGrandTotal().doubleValue();
+		if (cartTotal < 50.00)
+			amount += (cartTotal + (cartTotal * 0.1));
+		else {
+			cartTotal = shoppingCart.getDiscount().doubleValue();
+			amount += (cartTotal + (cartTotal * 0.1));
+		}
 
+		if (shippingMethod.equals("Ground"))
+			amount += 10;
+		else
+			amount += 30;
 
+		model.addAttribute("payload", getPayload(user, amount, shippingAddress.getShippingAddressCountry()));
+		paymentService.initialize(model, order.getId());
+		return "payment/pay";
 
+	}
 
-			model.addAttribute("userShippingList", userShippingList);
-			model.addAttribute("userPaymentList", userPaymentList);
+	@GetMapping("/callback/{id}")
+	public String callback(@RequestParam Map<String, String> params, @PathVariable Long id, Model model,
+						   Principal principal) {
+		String transactionId = params.get("transaction_id");
+		Map<String, Object> transactionData = paymentService.verifyTransaction(transactionId);
 
-			model.addAttribute("shippingAddress", shippingAddress);
-
-			model.addAttribute("classActiveShipping", true);
-			
-			if (userPaymentList.size() == 0) {
-				model.addAttribute("emptyPaymentList", true);
+		var user = userService.findByEmail(principal.getName());
+		ShoppingCart shoppingCart = user.getShoppingCart();
+		if (transactionData.get("status").equals("success"))
+		{
+			var order = orderService.findById(id);
+			order.setOrderStatus("created");
+			var shippingMethod = orderService.save(order).getShippingMethod();
+			LocalDate today = LocalDate.now();
+			LocalDate estimatedDeliveryDate;
+			if (shippingMethod.equals("groundShipping")) {
+				estimatedDeliveryDate = today.plusDays(10);
 			} else {
-				model.addAttribute("emptyPaymentList", false);
+				estimatedDeliveryDate = today.plusDays(3);
 			}
-			
-			
-			model.addAttribute("emptyShippingList", false);
-			
-			
-			return "checkout";
-		}
-	}
-	
-	@RequestMapping("/setPaymentMethod")
-	public String setPaymentMethod(
-			@RequestParam("userPaymentId") Long userPaymentId,
-			Principal principal, Model model
-			) {
-		User user = userService.findByEmail(principal.getName());
-		UserPayment userPayment = userPaymentService.findById(userPaymentId);
-		UserBilling userBilling = userPayment.getUserBilling();
-		
-		if(userPayment.getUser().getId() != user.getId()){
-			return "badRequestPage";
-		} else {
-			paymentService.setByUserPayment(userPayment, payment);
-			
-			List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-			
-			billingAddressService.setByUserBilling(userBilling, billingAddress);
+			var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 
-			addAttributes(model, user, cartItemList);
-			
-			List<UserShipping> userShippingList = user.getUserShippingList();
-			List<UserPayment> userPaymentList = user.getUserPaymentList();
-			
-			model.addAttribute("userShippingList", userShippingList);
-			model.addAttribute("userPaymentList", userPaymentList);
-			
-			model.addAttribute("shippingAddress", shippingAddress);
-			
-			model.addAttribute("classActivePayment", true);
-			
-			
-			model.addAttribute("emptyPaymentList", false);
-			
-			
-			if (userShippingList.size() == 0) {
-				model.addAttribute("emptyShippingList", true);
-			} else {
-				model.addAttribute("emptyShippingList", false);
-			}
-			
-			return "checkout";
+			eventPublisher.publishEvent(new OrderCreated(user, order));
+			shoppingCartService.clearShoppingCart(shoppingCart);
+			model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
+
+			model.addAttribute("cartItemList", cartItemList);
+			return "orderSubmittedPage";
+
 		}
+
+			return "redirect:checkout?id="+ shoppingCart.getId();
 	}
+
+	private Payload getPayload(User user, double amount, String country) {
+		var email = user.getEmail().equals("admin")? "chukwuma258@gmail.com" : user.getEmail();
+
+		var payload = new Payload();
+		payload.setAmount(String.format("%.2f", (amount / 0.0022)));
+		payload.setPayment_method("card");
+		payload.setDescription("Order payment");
+		payload.setCountry(switchCountry(country));
+		payload.setCurrency("NGN");
+		payload.getCustomer().setEmail(email);
+		payload.getCustomer().setName(user.getFirstName() + " " + user.getLastName());
+
+		return payload;
+	}
+
+	private String switchCountry(String country) {
+		return switch (country){
+			case "Nigeria" -> "NG";
+			case "UK" -> "UK";
+			case "US" -> "US";
+			case "Ghana" -> "GH";
+			case "Germany" -> "DE";
+			default -> "FR";
+		};
+	}
+
 
 	private void addAttributes(Model model, User user, List<CartItem> cartItemList) {
 		model.addAttribute("shippingAddress", shippingAddress);
-		model.addAttribute("payment", payment);
-		model.addAttribute("billingAddress", billingAddress);
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", user.getShoppingCart());
 

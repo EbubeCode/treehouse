@@ -487,14 +487,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .col-end-4 {
   grid-column-end: 4;
 }
+.row-start-1 {
+  grid-row-start: 1;
+}
 .row-start-2 {
   grid-row-start: 2;
 }
 .row-start-3 {
   grid-row-start: 3;
-}
-.row-start-1 {
-  grid-row-start: 1;
 }
 .row-end-4 {
   grid-row-end: 4;
@@ -598,6 +598,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mr-3 {
   margin-right: 0.75rem;
 }
+.mt-10 {
+  margin-top: 2.5rem;
+}
 .block {
   display: block;
 }
@@ -650,9 +653,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .h-5 {
   height: 1.25rem;
-}
-.h-2\/3 {
-  height: 66.666667%;
 }
 .w-full {
   width: 100%;
@@ -1070,6 +1070,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pt-1 {
   padding-top: 0.25rem;
 }
+.pl-20 {
+  padding-left: 5rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1196,6 +1199,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-cyan-600 {
   --tw-text-opacity: 1;
   color: rgb(8 145 178 / var(--tw-text-opacity));
+}
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 .line-through {
   -webkit-text-decoration-line: line-through;
@@ -1489,11 +1496,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 @media (min-width: 768px) {
 
-  .md\:sticky {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-
   .md\:col-start-1 {
     grid-column-start: 1;
   }
@@ -1512,10 +1514,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .md\:mt-56 {
     margin-top: 14rem;
-  }
-
-  .md\:h-screen {
-    height: 100vh;
   }
 
   .md\:w-1\/2 {
@@ -1542,10 +1540,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     grid-template-rows: repeat(1, minmax(0, 1fr));
   }
 
-  .md\:overflow-hidden {
-    overflow: hidden;
-  }
-
   .md\:border-r-2 {
     border-right-width: 2px;
   }
@@ -1564,10 +1558,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 @media (min-width: 1024px) {
-
-  .lg\:fixed {
-    position: fixed;
-  }
 
   .lg\:col-start-2 {
     grid-column-start: 2;
@@ -1630,10 +1620,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     height: 12rem;
   }
 
-  .lg\:h-screen {
-    height: 100vh;
-  }
-
   .lg\:w-12 {
     width: 3rem;
   }
@@ -1662,22 +1648,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .lg\:justify-between {
     justify-content: space-between;
-  }
-
-  .lg\:overflow-hidden {
-    overflow: hidden;
-  }
-
-  .lg\:overflow-y-auto {
-    overflow-y: auto;
-  }
-
-  .lg\:overflow-y-hidden {
-    overflow-y: hidden;
-  }
-
-  .lg\:overflow-y-scroll {
-    overflow-y: scroll;
   }
 
   .lg\:px-8 {

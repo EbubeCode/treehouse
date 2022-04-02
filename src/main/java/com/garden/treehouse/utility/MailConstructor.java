@@ -59,21 +59,24 @@ public class MailConstructor {
 
     }
 
-    public MimeMessagePreparator constructOrderConfirmationEmail(User user, Order order, Locale locale) {
-        Context context = new Context();
-        context.setVariable("order", order);
-        context.setVariable("user", user);
-        context.setVariable("cartItems", order.getCartItemList());
-        String text = templateEngine.process("orderConfirmationEmailTemplate", context);
+    public SimpleMailMessage createEmailUserForOrderCreated(
+            Long id, String userEmail
+    ) {
 
-        return mimeMessage -> {
-            MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
-            email.setTo(user.getEmail());
-            email.setSubject("Order Confirmation - " + order.getId());
-            email.setText(text, true);
-            email.setFrom(new InternetAddress("foysal.ecommerce@gmail.com"));
-        };
+        String url = baseUrl + "/orderInfo?id=" + id;
+        String message = """
+                Your order has been created, please click on the above link to 
+                view the details of your order
+                """;
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(userEmail);
+        email.setSubject("Tree-House - Order Created");
+        email.setText(url + "\n" + message);
+        return email;
+
     }
+
+
 
 
 }
