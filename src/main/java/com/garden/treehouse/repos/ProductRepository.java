@@ -9,10 +9,11 @@ import java.util.Optional;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
 
-    Optional<List<Product>> findByCategory(String category);
+    Optional<List<Product>> findByCategoryAndActive(String category, boolean active);
+    Optional<List<Product>> findAllByActive(boolean active);
 
-    Optional<List<Product>> findTop4ByOrderByIdDesc();
-    Optional<List<Product>> findProductsByNameContaining(String name);
-    Optional<List<Product>> findTop4ByCategoryOrderByIdDesc(String name);
+    Optional<List<Product>> findTop4ByActiveOrderByIdDesc(boolean active);
+    Optional<List<Product>> findProductsByNameContainingAndActive(String name, boolean active);
+    Optional<List<Product>> findTop4ByCategoryAndActiveOrderByIdDesc(String name, boolean active);
 
 }

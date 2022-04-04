@@ -17,16 +17,15 @@ public class ProductService{
 	}
 
 	public List<Product> findAll() {
-		List<Product> products = (List<Product>) productRepository.findAll();
-		List<Product> activeProducts = new ArrayList<>();
+		//		List<Product> activeProducts = new ArrayList<>();
+//
+//		for (Product product: products) {
+//			if(product.isActive()) {
+//				activeProducts.add(product);
+//			}
+//		}
 		
-		for (Product product: products) {
-			if(product.isActive()) {
-				activeProducts.add(product);
-			}
-		}
-		
-		return activeProducts;
+		return productRepository.findAllByActive(true).orElse(List.of());
 	}
 	
 	public Product findById(Long id) {
@@ -34,30 +33,30 @@ public class ProductService{
 	}
 	
 	public List<Product> findByCategory(String category){
-		List<Product> products = productRepository.findByCategory(category).orElse(List.of());
+		List<Product> products = productRepository.findByCategoryAndActive(category, true).orElse(List.of());
 		
-		List<Product> activeProducts = new ArrayList<>();
+//		List<Product> activeProducts = new ArrayList<>();
+//
+//		for (Product product: products) {
+//			if(product.isActive()) {
+//				activeProducts.add(product);
+//			}
+//		}
 		
-		for (Product product: products) {
-			if(product.isActive()) {
-				activeProducts.add(product);
-			}
-		}
-		
-		return activeProducts;
+		return products;
 	}
 	
 	public List<Product> blurrySearch(String title) {
-		List<Product> products = productRepository.findProductsByNameContaining(title).orElse(List.of());
-        List<Product> activeProducts = new ArrayList<>();
+		List<Product> products = productRepository.findProductsByNameContainingAndActive(title, true).orElse(List.of());
+//        List<Product> activeProducts = new ArrayList<>();
+//
+//		for (Product product: products) {
+//			if(product.isActive()) {
+//				activeProducts.add(product);
+//			}
+//		}
 		
-		for (Product product: products) {
-			if(product.isActive()) {
-				activeProducts.add(product);
-			}
-		}
-		
-		return activeProducts;
+		return products;
 	}
 
 	public String save(Product product) {

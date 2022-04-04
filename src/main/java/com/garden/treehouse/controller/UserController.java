@@ -98,10 +98,9 @@ public class UserController {
     }
 
     @GetMapping("/verify")
-    public String verifyEmail(@RequestParam("token_id") String tokenId, @RequestParam("is_password") boolean password, Model model, Principal principal) {
-        if (principal != null) {
-            return "forward:/";
-        }
+    public String verifyEmail(@RequestParam("token_id") String tokenId,
+                              @RequestParam("is_password") boolean password, Model model) {
+
         var response = tokenService.verifyToken(tokenId);
 
         return switch (response) {
@@ -118,7 +117,7 @@ public class UserController {
                     var email = response.userEmail;
                     yield "forward:/updatePassword?email=" + email;
                 }
-                yield "forward:/myAccount";
+                yield "redirect:/myAccount";
             }
 
         };

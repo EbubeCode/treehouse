@@ -11,19 +11,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class TreehouseApplication implements CommandLineRunner {
 
-	@Value("${admin-password}")
-	private String adminPassword;
+    @Value("${admin-password}")
+    private String adminPassword;
 
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(TreehouseApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TreehouseApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println(userService.createAdmin(adminPassword));
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        var admin = userService.findByEmail("admin");
+        if (admin == null)
+            System.out.println(userService.createAdmin(adminPassword));
+        else
+            System.out.println(userService.updateAdminPassword(adminPassword));
+    }
 }

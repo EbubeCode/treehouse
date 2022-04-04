@@ -39,6 +39,7 @@ public class OrderService{
 			Product product = cartItem.getProduct();
 			cartItem.setOrder(order);
 			product.setInStockNumber(product.getInStockNumber() - cartItem.getQty());
+
 		}
 		
 		order.setCartItemList(cartItemList);

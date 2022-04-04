@@ -30,22 +30,22 @@ public class HomeController {
 
     @RequestMapping("/")
     public String index(Model model) {
-        var products = productRepository.findTop4ByOrderByIdDesc().orElse(List.of());
+        var products = productRepository.findTop4ByActiveOrderByIdDesc(true).orElse(List.of());
         model.addAttribute("products", products);
 
-        var plants = productRepository.findTop4ByCategoryOrderByIdDesc("Plants").orElse(List.of());
+        var plants = productRepository.findTop4ByCategoryAndActiveOrderByIdDesc("Plants", true).orElse(List.of());
         model.addAttribute("plants", plants);
 
-        var fruits = productRepository.findTop4ByCategoryOrderByIdDesc("Fruits").orElse(List.of());
+        var fruits = productRepository.findTop4ByCategoryAndActiveOrderByIdDesc("Fruits", true).orElse(List.of());
         model.addAttribute("fruits", fruits);
 
-        var veges = productRepository.findTop4ByCategoryOrderByIdDesc("Vegetables").orElse(List.of());
+        var veges = productRepository.findTop4ByCategoryAndActiveOrderByIdDesc("Vegetables", true).orElse(List.of());
         model.addAttribute("veges", veges);
 
-        var tools = productRepository.findTop4ByCategoryOrderByIdDesc("Tools").orElse(List.of());
+        var tools = productRepository.findTop4ByCategoryAndActiveOrderByIdDesc("Tools", true).orElse(List.of());
         model.addAttribute("tools", tools);
 
-        var seeds = productRepository.findTop4ByCategoryOrderByIdDesc("Seeds").orElse(List.of());
+        var seeds = productRepository.findTop4ByCategoryAndActiveOrderByIdDesc("Seeds", true).orElse(List.of());
         model.addAttribute("seeds", seeds);
 
         return "index";

@@ -1,6 +1,7 @@
 package com.garden.treehouse.controller;
 
 import com.garden.treehouse.model.Product;
+import com.garden.treehouse.repos.ProductRepository;
 import com.garden.treehouse.services.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,15 +15,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class AdminController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public AdminController(ProductService productService) {
+    public AdminController(ProductService productService, ProductRepository productRepository) {
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @GetMapping("/admin/add")
@@ -146,8 +150,10 @@ public class AdminController {
         List<Product> productList;
         if (category != null)
             productList = productService.findByCategory(category);
-        else
-            productList = productService.findAll();
+        else {
+            productList = new ArrayList<>();
+            productRepository.findAll().forEach(productList::add);
+        }
 
         model.addAttribute("productList", productList);
         return "admin/productList";

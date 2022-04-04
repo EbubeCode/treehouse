@@ -61,6 +61,9 @@
                                             Price(£)
                                         </th>
                                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                            In-stock
+                                        </th>
+                                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                             Shipping weight(kg)
                                         </th>
                                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
@@ -87,6 +90,9 @@
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
                                                 class="block text-teal-900"><span
                                                 th:text="${item.product.price}"></span></p></td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
+                                                class="block text-teal-900"><span
+                                                th:text="${item.product.inStockNumber}"></span></p></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
                                                 class="block text-teal-900"><span
                                                 th:text="${item.product.shippingWeight}"></span></p></td>

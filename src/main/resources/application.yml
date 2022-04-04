@@ -32,3 +32,6 @@ spring:
 base_url: ${baseUrl}
 admin-password: ${adPassword}
 
+flutter-wave.public-key: ${fPub}
+flutter-wave.secret-key: ${fSec}
+
