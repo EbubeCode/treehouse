@@ -18,7 +18,7 @@ public class CartItem {
 	@OneToOne
 	private Product product;
 	
-	@OneToMany(mappedBy = "cartItem")
+	@OneToMany(mappedBy = "cartItem", cascade=CascadeType.ALL)
 	@JsonIgnore
 	private List<ProductToCartItem> productToCartItemList;
 	

@@ -15,7 +15,7 @@
 
 <!--        Login form-->
         <form th:action="@{/login}" th:method="POST" class="border-teal p-4 border-t-12 bg-white mb-6">
-            <div th:if="${param.error}" class="text-center pb-4">
+            <div th:if="${param.error}" class="text-center pb-4 text-red-600">
                 <h6 class="text-grey-dark text-sm">
                     Invalid User Credentials.
                 </h6>

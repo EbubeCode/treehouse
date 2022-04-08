@@ -25,20 +25,22 @@ public class OrderService{
 										  ShippingAddress shippingAddress,
 										  String shippingMethod,
 										  User user) {
-		var opOrder = orderRepository.findOrderByUserAndOrderStatus(user, "pending");
-		if(opOrder.isPresent())
-			return opOrder.get();
+
 		Order order = new Order();
 		order.setOrderStatus("pending");
 		order.setShippingAddress(shippingAddress);
-		order.setShippingMethod(shippingMethod);
+		order.setShippingMethod(shippingMethod == null ? "Ground": shippingMethod);
 		
 		List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		
 		for(CartItem cartItem : cartItemList) {
 			Product product = cartItem.getProduct();
 			cartItem.setOrder(order);
+			if (product.getInStockNumber() < cartItem.getQty())
+				return null;
 			product.setInStockNumber(product.getInStockNumber() - cartItem.getQty());
+			if (product.getInStockNumber()  <= 0)
+				product.setActive(false);
 
 		}
 		
@@ -51,7 +53,21 @@ public class OrderService{
 		
 		return order;
 	}
-	
+
+	public void deleteOrder(User user) {
+		var opOrder = orderRepository.findOrderByUserAndOrderStatus(user, "pending");
+		if(opOrder.isPresent()) {
+			var order = opOrder.get();
+			order.getCartItemList().forEach(c -> {
+				var newQty = c.getProduct().getInStockNumber() + c.getQty();
+				c.getProduct().setInStockNumber(newQty);
+				c.getProduct().setActive(true);
+			});
+			order = orderRepository.save(order);
+			orderRepository.delete(order);
+		}
+	}
+
 	public Order findById(Long id) {
 		return orderRepository.findById(id).orElse(null);
 	}
