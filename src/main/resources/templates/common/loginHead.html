@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="common-header(title)">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+    <title th:text="${title}"></title>
+
+    <link rel="stylesheet" th:href="@{/css/style.build.tailwind.css}">
+    <link rel="stylesheet" th:href="@{/css/style.dev.tailwind.css}">
+
+</head>
+
+<body>
+<div th:fragment="navbar">
+    <nav class="flex items-center justify-left flex-wrap bg-green-500 p-3 gap-2">
+        <div class="flex block justify-start w-full lg:w-fit">
+            <a th:href="@{/}">
+                <div class="flex items-center flex-shrink-0 text-white mr-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="fill-current h-15 w-15 sm:h-5 sm:w-5 mr-2"
+                         viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span class="font-semibold text-lg tracking-tight inline">Tree House</span>
+                </div>
+            </a>
+
+        </div>
+
+
+
+
+    </nav>
+
+</div>
+
+
+
+</body>
+</html>

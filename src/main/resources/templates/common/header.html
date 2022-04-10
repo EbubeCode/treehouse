@@ -2,11 +2,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:fragment="common-header">
+<head th:fragment="common-header(title)">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-    <title>Tree house</title>
+    <title th:text="${title}"></title>
 
     <link rel="stylesheet" th:href="@{/css/style.build.tailwind.css}">
     <link rel="stylesheet" th:href="@{/css/style.dev.tailwind.css}">

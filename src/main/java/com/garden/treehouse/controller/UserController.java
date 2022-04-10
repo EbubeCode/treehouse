@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.regex.Pattern;
 
 @Controller
 public class UserController {
@@ -30,6 +31,8 @@ public class UserController {
     private final UserDetailsService userSecurityService;
     private final OrderService orderService;
     private final UserShippingService userShippingService;
+    private static final Pattern regexPattern = Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
 
 
     public UserController(ApplicationEventPublisher applicationEventPublisher,
@@ -58,17 +61,15 @@ public class UserController {
     }
 
     @GetMapping("/forgotPassword")
-    public String forgetPassword(Principal principal, Model model) {
-        if (principal != null) {
-            return "forward:/";
-        }
+    public String forgetPassword(Model model) {
+
         model.addAttribute("errors", null);
-        model.addAttribute("email", null);
+        model.addAttribute("email", "");
         return "forget_password";
     }
 
     @PostMapping("/forgotPassword")
-    public String forgetPassword(Model model, @ModelAttribute String email) {
+    public String forgetPassword(Model model, @ModelAttribute("email") String email) {
         var user = userService.findByEmail(email);
         if (user != null) {
             applicationEventPublisher.publishEvent(new ForgotPasswordEvent(email));
@@ -80,6 +81,14 @@ public class UserController {
 
     @PostMapping("/signup")
     public String newUserPost(@ModelAttribute("user") User user, Model model) {
+        if (user.getFirstName().isBlank()) {
+            model.addAttribute("errors", "First Name cannot be empty");
+            return "signup";
+        }
+        if (!patternMatches(user.getEmail())) {
+            model.addAttribute("errors", "Email is not valid");
+            return "signup";
+        }
         if (!user.getPassword().equals(user.getMatchingPassword())) {
             model.addAttribute("errors", "Passwords don't match");
             return "signup";
@@ -115,7 +124,7 @@ public class UserController {
             case VALID_TOKEN -> {
                 if (password) {
                     var email = response.userEmail;
-                    yield "forward:/updatePassword?email=" + email;
+                    yield "redirect:/updatePassword?email=" + email;
                 }
                 yield "redirect:/myAccount";
             }
@@ -301,4 +310,9 @@ public class UserController {
                 .orElse(null);
     }
 
+    private static boolean patternMatches(String emailAddress) {
+        return regexPattern
+                .matcher(emailAddress)
+                .matches();
+    }
 }
