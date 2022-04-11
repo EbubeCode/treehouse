@@ -72,8 +72,8 @@ public class UserController {
     public String forgetPassword(Model model, @ModelAttribute("email") String email) {
         var user = userService.findByEmail(email);
         if (user != null) {
-            applicationEventPublisher.publishEvent(new ForgotPasswordEvent(email));
-            return "email_verification_consent";
+            //applicationEventPublisher.publishEvent(new ForgotPasswordEvent(email));
+            return "redirect:/updatePassword?email=" + email;
         }
         model.addAttribute("errors", "No account is linked to this email");
         return "forget_password";
@@ -106,31 +106,31 @@ public class UserController {
         return "redirect:/myAccount";
     }
 
-    @GetMapping("/verify")
-    public String verifyEmail(@RequestParam("token_id") String tokenId,
-                              @RequestParam("is_password") boolean password, Model model) {
-
-        var response = tokenService.verifyToken(tokenId);
-
-        return switch (response) {
-            case INVALID_TOKEN -> {
-                model.addAttribute("error", "to be invalid");
-                yield "verification_error";
-            }
-            case EXPIRED_TOKEN -> {
-                model.addAttribute("error", "to have expired");
-                yield "verification_error";
-            }
-            case VALID_TOKEN -> {
-                if (password) {
-                    var email = response.userEmail;
-                    yield "redirect:/updatePassword?email=" + email;
-                }
-                yield "redirect:/myAccount";
-            }
-
-        };
-    }
+//    @GetMapping("/verify")
+//    public String verifyEmail(@RequestParam("token_id") String tokenId,
+//                              @RequestParam("is_password") boolean password, Model model) {
+//
+//        var response = tokenService.verifyToken(tokenId);
+//
+//        return switch (response) {
+//            case INVALID_TOKEN -> {
+//                model.addAttribute("error", "to be invalid");
+//                yield "verification_error";
+//            }
+//            case EXPIRED_TOKEN -> {
+//                model.addAttribute("error", "to have expired");
+//                yield "verification_error";
+//            }
+//            case VALID_TOKEN -> {
+//                if (password) {
+//                    var email = response.userEmail;
+//                    yield "redirect:/updatePassword?email=" + email;
+//                }
+//                yield "redirect:/myAccount";
+//            }
+//
+//        };
+//    }
 
     @GetMapping("/signup")
     public String signUp(Model model, Principal principal) {

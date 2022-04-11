@@ -149,7 +149,7 @@ public class CheckoutController {
             }
             var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 
-            eventPublisher.publishEvent(new OrderCreated(user, order));
+            //eventPublisher.publishEvent(new OrderCreated(user, order));
             shoppingCartService.clearShoppingCart(shoppingCart);
             model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
 
