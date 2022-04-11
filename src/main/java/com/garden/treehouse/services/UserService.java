@@ -68,9 +68,9 @@ public class UserService {
         user.setShoppingCart(shoppingCart);
 
         user.setUserShippingList(new ArrayList<UserShipping>());
-
-        var localUser = userRepository.save(user);
-        publisher.publishEvent(new CreateUserEvent(localUser));
+        userRepository.save(user);
+        //var localUser =
+        //publisher.publishEvent(new CreateUserEvent(localUser));
 
     }
 

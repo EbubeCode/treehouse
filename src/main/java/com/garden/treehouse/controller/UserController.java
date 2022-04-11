@@ -103,7 +103,7 @@ public class UserController {
 
         userService.createUser(user);
 
-        return "registration_consent";
+        return "redirect:/myAccount";
     }
 
     @GetMapping("/verify")

@@ -29,7 +29,7 @@ public class User {
 
     @Column(name = "email", nullable = false, updatable = false)
     private String email;
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private ShoppingCart shoppingCart;
