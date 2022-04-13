@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/header :: common-header"></head>
 
-<body>
+
 <head th:replace="common/header :: common-header('User Profile')"></head>
-
+<body>
+<div th:replace="common/header :: navbar"></div>
 <div class="pl-4">
 	<span><a class="hover:text-teal-400 text-teal-700" th:href="@{/myAccount}">My Account</a>>Login & Security</span>
 	<h2 class="text-3xl p-5">Login & Security</h2>

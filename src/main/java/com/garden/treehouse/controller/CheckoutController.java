@@ -75,7 +75,7 @@ public class CheckoutController {
             model.addAttribute("error", "Couldn't make payment.");
         else if (error)
             model.addAttribute("error", "Missing some required information");
-        else if (!inStock)
+        else if (inStock != null && !inStock)
             model.addAttribute("error", "Not enough product(s) in stock.");
         else
             model.addAttribute("error", null);

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/header :: common-header"></head>
 
-<body>
+
 <head th:replace="common/header :: common-header('User Orders')"></head>
-
+<body>
 <div class="pl-4">
+    <div th:replace="common/header :: navbar"></div>
     <span><a class="hover:text-teal-400" th:href="@{/myAccount}">My Account</a>>Orders</span>
     <h2 class="text-3xl p-5">Orders</h2>
 
