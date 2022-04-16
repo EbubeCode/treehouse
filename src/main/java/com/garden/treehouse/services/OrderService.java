@@ -23,14 +23,12 @@ public class OrderService {
 
     public Order createOrder(ShoppingCart shoppingCart,
                              ShippingAddress shippingAddress,
-                             String shippingMethod,
+                             String shippingMethod, Payment payment,
                              User user) {
 
         Order order = new Order();
-        order.setOrderStatus("pending");
+        order.setOrderStatus("created");
         order.setShippingAddress(shippingAddress);
-        System.out.println("====================================================================================");
-        System.out.println(shippingMethod);
         order.setShippingMethod(shippingMethod == null ? "Ground" : shippingMethod);
 
         List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
@@ -46,6 +44,7 @@ public class OrderService {
 
         }
 
+        order.setPayment(payment);
         order.setCartItemList(cartItemList);
         order.setOrderDate(Calendar.getInstance().getTime());
         order.setOrderTotal(shoppingCart.getGrandTotal());
@@ -56,32 +55,8 @@ public class OrderService {
         return order;
     }
 
-    public void deleteOrder(User user) {
-        var opOrder = orderRepository.findOrderByOrderStatus("pending");
-        if (opOrder.isPresent()) {
-            var orders = opOrder.get();
-            var order = orders.stream()
-                    .filter(o -> o.getUser().getId().equals(user.getId()))
-                    .findFirst()
-                    .orElse(null);
-            if (order != null) {
-                order.getCartItemList().forEach(c -> {
-                    var newQty = c.getProduct().getInStockNumber() + c.getQty();
-                    c.getProduct().setInStockNumber(newQty);
-                    c.getProduct().setActive(true);
-                });
-                order = orderRepository.save(order);
-                orderRepository.delete(order);
-            }
-        }
-    }
-
     public Order findById(Long id) {
         return orderRepository.findById(id).orElse(null);
-    }
-
-    public Order save(Order order) {
-        return orderRepository.save(order);
     }
 
 }

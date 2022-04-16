@@ -1,20 +1,21 @@
 package com.garden.treehouse.controller;
 
-import com.garden.treehouse.events.OrderCreated;
 import com.garden.treehouse.model.*;
-import com.garden.treehouse.payment.Payload;
-import com.garden.treehouse.payment.PaymentService;
+import com.garden.treehouse.repos.PaymentRepository;
 import com.garden.treehouse.services.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 
 @Controller
@@ -25,21 +26,21 @@ public class CheckoutController {
     private final UserService userService;
     private final CartItemService cartItemService;
     private final ShippingAddressService shippingAddressService;
-    private final PaymentService paymentService;
     private final OrderService orderService;
     private final ShoppingCartService shoppingCartService;
-    private final ApplicationEventPublisher eventPublisher;
+
+    private final PaymentRepository paymentRepository;
 
     public CheckoutController(UserService userService,
                               CartItemService cartItemService, ShippingAddressService shippingAddressService,
-                              PaymentService paymentService, OrderService orderService, ShoppingCartService shoppingCartService, ApplicationEventPublisher eventPublisher) {
+                              OrderService orderService, ShoppingCartService shoppingCartService,
+                              PaymentRepository paymentRepository) {
         this.userService = userService;
         this.cartItemService = cartItemService;
         this.shippingAddressService = shippingAddressService;
-        this.paymentService = paymentService;
         this.orderService = orderService;
         this.shoppingCartService = shoppingCartService;
-        this.eventPublisher = eventPublisher;
+        this.paymentRepository = paymentRepository;
     }
 
     @GetMapping("/checkout")
@@ -59,6 +60,7 @@ public class CheckoutController {
         var userShippingList = user.getUserShippingList();
 
         model.addAttribute("userShippingList", userShippingList);
+        model.addAttribute("payment", new Payment());
 
 
         for (UserShipping userShipping : userShippingList) {
@@ -86,16 +88,11 @@ public class CheckoutController {
 
     @RequestMapping("/pay")
     public String checkoutPost(@ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
-                               @ModelAttribute("shippingMethod") String shippingMethod,
+                               @ModelAttribute("shippingMethod") String shippingMethod, @ModelAttribute("payment") Payment payment,
                                Principal principal, Model model, HttpServletRequest request) throws Exception {
         ShoppingCart shoppingCart = userService.findByEmail(principal.getName()).getShoppingCart();
         User user = userService.findByEmail(principal.getName());
 
-        if (request.getMethod().contentEquals("GET")) {
-            //This happens in case of a cancelling payment. This redirects to the checkout page.
-            orderService.deleteOrder(user);
-            return "redirect:checkout?id=" + shoppingCart.getId();
-        }
 
         if (shippingAddress.getShippingAddressStreet().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
                 || shippingAddress.getShippingAddressState().isEmpty()
@@ -103,89 +100,58 @@ public class CheckoutController {
             return "redirect:checkout?id=" + shoppingCart.getId() + "&error=true";
         }
 
+        var payments = paymentRepository.findAll();
+        boolean check = true;
+        for (var pay: payments) {
+            if (payment.getType().equals(pay.getType()))
+                if (payment.getCardNumber().equals(pay.getCardNumber()))
+                    if (payment.getCvc() == pay.getCvc())
+                        if (payment.getExpiryMonth() == pay.getExpiryMonth())
+                            if (payment.getExpiryYear() == pay.getExpiryYear())
+                                check = false;
+        }
 
-        Order order = orderService.createOrder(shoppingCart, shippingAddress, shippingMethod, user);
-        if (order == null)
-            return "redirect:checkout?id=" + shoppingCart.getId() + "&inStock=false";
+        if (check)
+            return "redirect:checkout?id=" + shoppingCart.getId();
 
         var amount = 0;
         var cartTotal = shoppingCart.getGrandTotal().doubleValue();
-        if (cartTotal < 50.00)
-            amount += (cartTotal + (cartTotal * 0.1));
-        else {
+        if (cartTotal >= 50.00)
             cartTotal = shoppingCart.getDiscount().doubleValue();
-            amount += (cartTotal + (cartTotal * 0.1));
-        }
+
+        amount += (cartTotal + (cartTotal * 0.1));
 
         if (shippingMethod.equals("Ground"))
             amount += 10;
         else
             amount += 30;
 
-        model.addAttribute("payload", getPayload(user, amount, shippingAddress.getShippingAddressCountry()));
-        paymentService.initialize(model, order.getId());
-        return "payment/pay";
+        shoppingCart.setGrandTotal(BigDecimal.valueOf(amount));
+        Order order = orderService.createOrder(shoppingCart, shippingAddress, shippingMethod, payment, user);
+        if (order == null)
+            return "redirect:checkout?id=" + shoppingCart.getId() + "&inStock=false";
 
-    }
 
-    @GetMapping("/callback/{id}")
-    public String callback(@RequestParam Map<String, String> params, @PathVariable Long id, Model model,
-                           Principal principal) {
-        String transactionId = params.get("transaction_id");
-        Map<String, Object> transactionData = paymentService.verifyTransaction(transactionId);
+        shoppingCartService.clearShoppingCart(shoppingCart);
+        model.addAttribute("cartItemList", order.getCartItemList());
 
-        var user = userService.findByEmail(principal.getName());
-        ShoppingCart shoppingCart = user.getShoppingCart();
-        if (transactionData.get("status").equals("success")) {
-            var order = orderService.findById(id);
-            order.setOrderStatus("created");
-            var shippingMethod = orderService.save(order).getShippingMethod();
-            LocalDate today = LocalDate.now();
-            LocalDate estimatedDeliveryDate;
-            if (shippingMethod.equals("groundShipping")) {
-                estimatedDeliveryDate = today.plusDays(10);
-            } else {
-                estimatedDeliveryDate = today.plusDays(3);
-            }
-            var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-
-            //eventPublisher.publishEvent(new OrderCreated(user, order));
-            shoppingCartService.clearShoppingCart(shoppingCart);
-            model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
-
-            model.addAttribute("cartItemList", cartItemList);
-            return "orderSubmittedPage";
-
+        LocalDate today = LocalDate.now();
+        LocalDate estimatedDeliveryDate;
+        if (shippingMethod.equals("Ground")) {
+            estimatedDeliveryDate = today.plusDays(10);
+        } else {
+            estimatedDeliveryDate = today.plusDays(3);
         }
+        var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 
-        return "redirect:checkout?id=" + shoppingCart.getId();
+        //eventPublisher.publishEvent(new OrderCreated(user, order));
+        shoppingCartService.clearShoppingCart(shoppingCart);
+        model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
+
+        return "orderSubmittedPage";
+
     }
 
-    private Payload getPayload(User user, double amount, String country) {
-        var email = user.getEmail().equals("admin") ? "chukwuma258@gmail.com" : user.getEmail();
-
-        var payload = new Payload();
-        payload.setAmount(String.format("%.2f", (amount / 0.0022)));
-        payload.setPayment_method("card");
-        payload.setDescription("Order payment");
-        payload.setCountry(switchCountry(country));
-        payload.setCurrency("NGN");
-        payload.getCustomer().setEmail(email);
-        payload.getCustomer().setName(user.getFirstName() + " " + user.getLastName());
-
-        return payload;
-    }
-
-    private String switchCountry(String country) {
-        return switch (country) {
-            case "Nigeria" -> "NG";
-            case "UK" -> "UK";
-            case "US" -> "US";
-            case "Ghana" -> "GH";
-            case "Germany" -> "DE";
-            default -> "FR";
-        };
-    }
 
 
     private void addAttributes(Model model, User user, List<CartItem> cartItemList) {

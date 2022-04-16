@@ -1,6 +1,5 @@
 package com.garden.treehouse.controller;
 
-import com.garden.treehouse.events.ForgotPasswordEvent;
 import com.garden.treehouse.model.User;
 import com.garden.treehouse.model.UserShipping;
 import com.garden.treehouse.services.OrderService;

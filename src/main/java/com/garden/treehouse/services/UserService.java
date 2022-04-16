@@ -1,6 +1,5 @@
 package com.garden.treehouse.services;
 
-import com.garden.treehouse.events.CreateUserEvent;
 import com.garden.treehouse.model.ShoppingCart;
 import com.garden.treehouse.model.User;
 import com.garden.treehouse.model.UserShipping;
@@ -8,7 +7,6 @@ import com.garden.treehouse.model.security.Role;
 import com.garden.treehouse.model.security.UserRole;
 import com.garden.treehouse.repos.RoleRepository;
 import com.garden.treehouse.repos.UserRepository;
-import com.garden.treehouse.repos.UserShippingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 

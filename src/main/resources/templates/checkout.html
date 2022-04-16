@@ -240,6 +240,114 @@
 
                 </div>
             </details>
+            <details class="w-full">
+                <summary class="p-4 bg-teal-200 mt-2 text-xl font-bold rounded-lg">Payment</summary>
+
+                <div th:object="${payment}" class="py-4 px-6 lg:px-10">
+                    <div class="flex justify-left">
+                        <div class="mb-6 xl:w-96">
+                            <label for="type" class="block text-lg text-gray-500">Card Type</label>
+                            <select th:field="*{type}" id="type" class=" block
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+      focus:text-gray-700 focus:bg-white focus:border-gray-600 focus:outline-none" aria-label="Default select example">
+                                <option th:selected="(*{type}=='Master Card')" selected value="Master Card">Master Card</option>
+                                <option th:selected="(*{type}=='Visa')" value="Visa">Visa</option>
+                                <option th:selected="(*{type}=='Verve')" value="Verve">Verve</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mb-6">
+                        <label for="cardNumber" class="block text-lg text-gray-500">Card Number</label>
+                        <input type="text" id="cardNumber"
+                               class="form-control block appearance-none
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                               th:field="*{cardNumber}" placeholder="Card Number">
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label for="cvc" class="block text-lg text-gray-500">cvc</label>
+                        <input type="number" step="any" id="cvc"
+                               class="form-control block appearance-none
+                            w-full
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                               th:field="*{cvc}" placeholder="cvc">
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label for="expiryMonth" class="block text-lg text-gray-500">Expiry Date</label>
+                        <div class="flex">
+                            <input type="number" id="expiryMonth"
+                                   class="form-control block appearance-none
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                   th:field="*{expiryMonth}"
+                                   placeholder="Expiry Month">
+                            <span class="text-3xl text-teal-700"> / </span>
+                            <input type="number" step="any" id="expiryYear"
+                                   class="form-control block appearance-none
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                   th:field="*{expiryYear}"
+                                   placeholder="Expiry Year">
+                        </div>
+
+                    </div>
+                </div>
+            </details>
             <div class="flex">
                 <div class="mt-3 ml-3">
                     <div class="form-check">
