@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#shipMethod').val("Ground");
 
     $('.radio').on('click', function () {
         let radioId = parseInt($(this).attr('id').substring(5));

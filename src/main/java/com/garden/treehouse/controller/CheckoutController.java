@@ -93,6 +93,7 @@ public class CheckoutController {
         ShoppingCart shoppingCart = userService.findByEmail(principal.getName()).getShoppingCart();
         User user = userService.findByEmail(principal.getName());
 
+        System.out.println(shippingMethod);
 
         if (shippingAddress.getShippingAddressStreet().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
                 || shippingAddress.getShippingAddressState().isEmpty()
@@ -142,9 +143,7 @@ public class CheckoutController {
         } else {
             estimatedDeliveryDate = today.plusDays(3);
         }
-        var cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
 
-        //eventPublisher.publishEvent(new OrderCreated(user, order));
         shoppingCartService.clearShoppingCart(shoppingCart);
         model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
 
