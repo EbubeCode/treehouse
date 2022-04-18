@@ -33,13 +33,13 @@
                                     <div class="flex  justify-end">
                                         <span class="text-lg font-semibold text-gray-700">X</span>
                                         <span th:id="price + ${item.id}" class="text-lg font-semibold text-gray-700"
-                                              th:text="*{price}"></span>
+                                              th:text="*{#numbers.formatDecimal(price, 1, 2)}"></span>
                                     </div>
                                     <div class="flex  justify-end    gap-0 mt-2">
                                         <span class="text-lg font-semibold text-gray-900">Subtotal = £</span>
                                         <span th:id="subTotal + ${item.id}"
                                               class="sub-total text-lg font-semibold text-gray-900"
-                                              th:text="${item.subtotal}"></span>
+                                              th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)}"></span>
                                     </div>
                                 </div>
                                 <div class="flex justify-center ">
@@ -69,7 +69,7 @@
         <div class="md:mt-56">
             <div class="flex justify-end  gap-0 mt-2 pr-4">
                 <span class="text-3xl font-semibold text-teal-900">Grand Total = £</span>
-                <span class="text-3xl font-semibold text-teal-900" th:text="${shoppingCart.GrandTotal}"
+                <span class="text-3xl font-semibold text-teal-900" th:text="${#numbers.formatDecimal(shoppingCart.GrandTotal, 1, 2)}"
                       id="grand-total"></span>
             </div>
 
@@ -78,7 +78,7 @@
                 <h2 class="pr-4">+10% Discount</h2>
                 <span class="text-xl font-bold text-teal-900">New Total =</span>
                 <span id="discount" class="text-xl font-bold text-teal-900"
-                      th:text="('£' + ${shoppingCart.discount})"></span>
+                      th:text="('£' + ${#numbers.formatDecimal(shoppingCart.discount, 1, 2)})"></span>
             </div>
         </div>
         <div class="flex md:justify-between mt-8">

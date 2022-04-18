@@ -20,7 +20,7 @@
                         <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
                             th:text="('Category: ' + *{category})"></h2>
                         <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
-                            th:text="('Price: £' + *{price})"></h2>
+                            th:text="('Price: £' + *{#numbers.formatDecimal(price, 1, 2)})"></h2>
                         <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
                             th:text="('In Stock: ' + *{inStockNumber} + ' pieces')"></h2>
                         <h2 class="lg:text-lg text-sm  mb-1 ml-3 font-semibold"
@@ -32,7 +32,7 @@
                         <div th:replace="common/quantity-control :: quntity-control(1, *{id})"></div>
 
                         <div class="flex  justify-end  grid row gap-3">
-                            <span class="text-lg font-semibold text-gray-900" th:text="('£' + *{price})"></span>
+                            <span class="text-lg font-semibold text-gray-900" th:text="('£' + *{#numbers.formatDecimal(price, 1, 2)})"></span>
                             <a sec:authorize="isAuthenticated()"  th:href="@{/productDetail(id=*{id})}" class="text-white bg-blue-700 hover:bg-teal-500 focus:ring-4 focus:ring-blue-300 font-medium
 							rounded-lg text-sm px-5 py-2.5 text-center" id="addToCart">Add To Cart</a>
                             <a sec:authorize="isAnonymous()"  th:href="@{/productDetailS(id=*{id})}" class="text-white bg-blue-700 hover:bg-teal-500 focus:ring-4 focus:ring-blue-300 font-medium

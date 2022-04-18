@@ -14,16 +14,16 @@
             <div>
                 <h1 class="py-6 px-2 text-3xl font-bold font-mono text-teal-800">Order Summary</h1>
                 <p class="font-bold px-2 text-lg">Order total: £<span id="order-total"
-                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal}: ${shoppingCart.discount}"></span>
+                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${#numbers.formatDecimal(shoppingCart.GrandTotal, 1, 2)}: ${#numbers.formatDecimal(shoppingCart.discount, 1, 2)}"></span>
                 </p>
                 <p class="font-semibold pl-20 text-sm">+ tax: £<span id="tax"
-                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal * 0.1}: ${shoppingCart.discount * 0.1}"></span>
+                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${#numbers.formatDecimal(shoppingCart.GrandTotal * 0.1, 1, 2)}: ${#numbers.formatDecimal(shoppingCart.discount * 0.1, 1, 2)}"></span>
                 </p>
                 <p class="font-semibold pl-20 text-sm">+ shipping: £<span id="shipping-price"
-                        th:text="${10.00}"></span>
+                        th:text="${#numbers.formatDecimal(10, 1, 2)}"></span>
                 </p>
                 <p class="font-bold px-2 text-lg">Grand total: £<span id="grand-total"
-                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${shoppingCart.GrandTotal+ shoppingCart.GrandTotal * 0.1 + 10.00}: ${shoppingCart.discount + shoppingCart.discount * 0.1 + 10.00}"></span>
+                        th:text="${shoppingCart.GrandTotal < 50.00} ? ${#numbers.formatDecimal(shoppingCart.GrandTotal+ shoppingCart.GrandTotal * 0.1 + 10.00, 1, 2}: ${#numbers.formatDecimal(shoppingCart.discount + shoppingCart.discount * 0.1 + 10.00, 1, 2)}"></span>
                 </p>
             </div>
             <div id="check-out" class="flex justify-around my-4">
@@ -64,7 +64,7 @@
                                             In-stock
                                         </th>
                                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            Shipping weight(kg)
+                                            Shipping prodweight(kg)
                                         </th>
                                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                             Qty
@@ -89,7 +89,7 @@
                                                 th:text="${item.product.category}"></span></p></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
                                                 class="block text-teal-900"><span
-                                                th:text="${item.product.price}"></span></p></td>
+                                                th:text="${#numbers.formatDecimal(item.product.price, 1, 2)}"></span></p></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"><p
                                                 class="block text-teal-900"><span
                                                 th:text="${item.product.inStockNumber}"></span></p></td>

@@ -30,11 +30,7 @@ public class TreehouseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        var admin = userService.findByEmail("admin");
-        if (admin == null)
-            System.out.println(userService.createAdmin(adminPassword));
-        else
-            System.out.println(userService.updateAdminPassword(adminPassword));
+        userService.createAdmin(adminPassword);
 
         var payments = paymentRepository.findAll();
         if (payments.isEmpty()) {

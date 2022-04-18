@@ -52,13 +52,12 @@ public class UserService {
         Role role = new Role();
         role.setRoleId(1);
         role.setName("ROLE_USER");
+        role = roleRepository.save(role);
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(user, role));
 
-        for (UserRole ur : userRoles)
-            roleRepository.save(ur.getRole());
 
-        user.getUserRoles().addAll(userRoles);
+        user.setUserRoles(userRoles);
 
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
@@ -66,8 +65,6 @@ public class UserService {
 
         user.setUserShippingList(new ArrayList<UserShipping>());
         userRepository.save(user);
-        //var localUser =
-        //publisher.publishEvent(new CreateUserEvent(localUser));
 
     }
 
@@ -75,17 +72,21 @@ public class UserService {
     @Transactional
     public String createAdmin(String password) {
 
-
-        var admin = new User();
+        var admin = findByEmail("admin");
+        if (admin != null)
+            userRepository.delete(admin);
+        admin = new User();
 
         admin.setPassword(passwordEncoder.encode(password));
 
         Role role = new Role();
         role.setRoleId(1);
         role.setName("ROLE_USER");
+        role = roleRepository.save(role);
         Role role1 = new Role();
         role1.setRoleId(2);
         role1.setName("ROLE_ADMIN");
+        role1 = roleRepository.save(role1);
 
         Set<UserRole> userRoles = new HashSet<>();
 
@@ -111,12 +112,6 @@ public class UserService {
 
     }
 
-    public String updateAdminPassword(String password) {
-        var admin = userRepository.findByEmail("admin").get();
-        admin.setPassword(passwordEncoder.encode(password));
-        userRepository.save(admin);
-        return "Admin password updated successfully";
-    }
 
     public User save(User user) {
         return userRepository.save(user);

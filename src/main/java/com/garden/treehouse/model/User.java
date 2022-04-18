@@ -40,8 +40,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orderList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<UserRole> userRoles = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<UserRole> userRoles;
 
     public Long getId() {
         return id;
