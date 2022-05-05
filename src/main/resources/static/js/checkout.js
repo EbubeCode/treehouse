@@ -42,7 +42,7 @@ $(document).ready(function () {
 })
 
 function switchShipping(userShipping) {
-    $('#userShippingZipcode').val(userShipping.userShippingZipcode);
+    $('#userShippingPostcode').val(userShipping.userShippingPostcode);
     $('#userShippingStreet').val(userShipping.userShippingStreet);
     $('#userShippingState').val(userShipping.userShippingState);
     $('#userShippingCountry').val(userShipping.userShippingCountry);

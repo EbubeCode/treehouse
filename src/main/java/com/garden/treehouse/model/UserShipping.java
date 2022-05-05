@@ -14,7 +14,7 @@ public class UserShipping {
 	private String userShippingCity;
 	private String userShippingState;
 	private String userShippingCountry;
-	private String userShippingZipcode;
+	private String userShippingPostcode;
 	private boolean userShippingDefault;
 	
 	
@@ -84,13 +84,13 @@ public class UserShipping {
 	}
 
 
-	public String getUserShippingZipcode() {
-		return userShippingZipcode;
+	public String getUserShippingPostcode() {
+		return userShippingPostcode;
 	}
 
 
-	public void setUserShippingZipcode(String userShippingZipcode) {
-		this.userShippingZipcode = userShippingZipcode;
+	public void setUserShippingPostcode(String userShippingZipcode) {
+		this.userShippingPostcode = userShippingZipcode;
 	}
 
 

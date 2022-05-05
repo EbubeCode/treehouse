@@ -11,7 +11,7 @@ public class ShippingAddress {
 	private String ShippingAddressCity;
 	private String ShippingAddressState;
 	private String ShippingAddressCountry;
-	private String ShippingAddressZipcode;
+	private String ShippingAddressPostcode;
 	
 	@OneToOne
 	private Order order;
@@ -65,13 +65,13 @@ public class ShippingAddress {
 	}
 
 
-	public String getShippingAddressZipcode() {
-		return ShippingAddressZipcode;
+	public String getShippingAddressPostcode() {
+		return ShippingAddressPostcode;
 	}
 
 
-	public void setShippingAddressZipcode(String shippingAddressZipcode) {
-		ShippingAddressZipcode = shippingAddressZipcode;
+	public void setShippingAddressPostcode(String shippingAddressPostcode) {
+		ShippingAddressPostcode = shippingAddressPostcode;
 	}
 
 

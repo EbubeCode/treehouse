@@ -36,7 +36,7 @@
                             <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">City</th>
                             <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">State</th>
                             <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">Country</th>
-                            <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">Zipcode</th>
+                            <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">Postal Code</th>
                             <th scope="col" class="text-sm font-medium text-gray-900  py-4 text-left">Default</th>
                         </tr>
                         </thead>
@@ -70,7 +70,7 @@
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap"><a
                                     class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
                                     th:href="@{/addShipping(id=${address.id})}"><span
-                                    th:text="${address.userShippingZipcode}"></span></a></td>
+                                    th:text="${address.userShippingPostcode}"></span></a></td>
                             <td class="text-sm text-gray-900 font-light py-4 whitespace-nowrap flex justify-between pr-3">
                                 <a class="block  hover:text-teal-500 text-teal-900 cursor-pointer"
                                    th:href="@{/addShipping(id=${address.id})}"><span

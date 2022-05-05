@@ -3,7 +3,6 @@ package com.garden.treehouse.controller;
 import com.garden.treehouse.model.*;
 import com.garden.treehouse.repos.PaymentRepository;
 import com.garden.treehouse.services.*;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,7 +96,7 @@ public class CheckoutController {
 
         if (shippingAddress.getShippingAddressStreet().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
                 || shippingAddress.getShippingAddressState().isEmpty()
-                || shippingAddress.getShippingAddressZipcode().isEmpty()) {
+                || shippingAddress.getShippingAddressPostcode().isEmpty()) {
             return "redirect:checkout?id=" + shoppingCart.getId() + "&error=true";
         }
 

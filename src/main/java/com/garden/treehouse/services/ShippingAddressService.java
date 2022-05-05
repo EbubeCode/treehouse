@@ -13,7 +13,7 @@ public class ShippingAddressService{
 		shippingAddress.setShippingAddressCity(userShipping.getUserShippingCity());
 		shippingAddress.setShippingAddressState(userShipping.getUserShippingState());
 		shippingAddress.setShippingAddressCountry(userShipping.getUserShippingCountry());
-		shippingAddress.setShippingAddressZipcode(userShipping.getUserShippingZipcode());
+		shippingAddress.setShippingAddressPostcode(userShipping.getUserShippingPostcode());
 		
 		return shippingAddress;
 	}

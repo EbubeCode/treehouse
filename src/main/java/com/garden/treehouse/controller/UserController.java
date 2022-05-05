@@ -286,7 +286,7 @@ public class UserController {
         old.setUserShippingCity(newShipping.getUserShippingCity());
         old.setUserShippingState(newShipping.getUserShippingState());
         old.setUserShippingCountry(newShipping.getUserShippingCountry());
-        old.setUserShippingZipcode(newShipping.getUserShippingZipcode());
+        old.setUserShippingPostcode(newShipping.getUserShippingPostcode());
     }
 
     @DeleteMapping("/removeUserShipping")
