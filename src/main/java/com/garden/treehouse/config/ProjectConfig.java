@@ -4,8 +4,6 @@ import com.garden.treehouse.repos.UserRepository;
 import com.garden.treehouse.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,10 +12,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class ProjectConfig {
-
 
 
     @Bean
@@ -30,7 +36,8 @@ public class ProjectConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private static final String[] PUBLIC_MATCHERS = {
+    String path = System.getProperty("user.home") + File.separator + "treehouse";
+    private final String[] PUBLIC_MATCHERS = {
             "/css/**",
             "/js/**",
             "/image/**",
@@ -46,7 +53,8 @@ public class ProjectConfig {
             "/searchByCategory",
             "/searchProduct",
             "/verify",
-            "/forgotPassword"
+            "/forgotPassword",
+            "/images"
     };
 
     @Bean
@@ -68,4 +76,8 @@ public class ProjectConfig {
                 .logoutSuccessUrl("/?logout").deleteCookies("remember-me").permitAll();
         return http.build();
     }
+
+
+
+
 }

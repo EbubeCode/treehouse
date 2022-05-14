@@ -166,7 +166,9 @@ public class UserController {
     }
 
     @GetMapping("/myAccount")
-    public String myAccount() {
+    public String myAccount(Principal principal) {
+        if (principal != null && principal.getName().equals("admin"))
+            return "forward:/admin";
 
         return "myAccount";
     }

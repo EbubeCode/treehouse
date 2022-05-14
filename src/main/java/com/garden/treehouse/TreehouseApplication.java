@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @SpringBootApplication
-public class TreehouseApplication implements CommandLineRunner {
+@ServletComponentScan
+public class TreehouseApplication  implements CommandLineRunner {
 
     @Value("${admin-password}")
     private String adminPassword;
@@ -39,6 +41,8 @@ public class TreehouseApplication implements CommandLineRunner {
             var payment3 = new Payment("Verve", "5061460410120223210", 3, 27, 780);
 
             System.out.println(paymentRepository.saveAll(List.of(payment1, payment2, payment3)));
+
+
         }
     }
 }

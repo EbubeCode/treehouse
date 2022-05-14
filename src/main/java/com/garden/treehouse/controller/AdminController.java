@@ -3,6 +3,9 @@ package com.garden.treehouse.controller;
 import com.garden.treehouse.model.Product;
 import com.garden.treehouse.repos.ProductRepository;
 import com.garden.treehouse.services.ProductService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -10,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -24,9 +29,18 @@ public class AdminController {
     private final ProductService productService;
     private final ProductRepository productRepository;
 
+    String path = System.getProperty("user.home") + File.separator + "treehouse";
+
     public AdminController(ProductService productService, ProductRepository productRepository) {
         this.productService = productService;
         this.productRepository = productRepository;
+        if (!Files.exists(Path.of(path))) {
+            try {
+                Files.createDirectory(Path.of(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @GetMapping("/admin/add")
@@ -54,10 +68,10 @@ public class AdminController {
             else
                 imageName = StringUtils.cleanPath(productImage.getOriginalFilename());
 
-
-            String imageUrl = "/product-image/" + imageName;
+            var sep = File.separator;
+            String imageUrl = "/images/" + imageName;
             BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream("src/main/resources/static" + imageUrl));
+                    new FileOutputStream(path + sep + imageName));
             stream.write(bytes);
             stream.close();
             product.setImageUrl(imageUrl);
@@ -111,15 +125,15 @@ public class AdminController {
                 else
                     imageName = StringUtils.cleanPath(productImage.getOriginalFilename());
 
-
-                String imageUrl = "/product-image/" + imageName;
-                if (currentProduct.getImageUrl() != null)
-                    Files.delete(Paths.get("src/main/resources/static" + currentProduct.getImageUrl()));
+                var sep = File.separator;
+                String imageUrl = "/images/" + imageName;
+//                if (currentProduct.getImageUrl() != null)
+//                    Files.delete(Paths.get(currentProduct.getImageUrl()));
 
                 currentProduct.setImageUrl(imageUrl);
 
                 BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream("src/main/resources/static" + imageUrl));
+                        new FileOutputStream(path  + sep + imageName));
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
@@ -178,5 +192,16 @@ public class AdminController {
 
         productService.deleteById(id);
         return "redirect:/admin";
+    }
+
+        @GetMapping("/images/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
+        byte[] image = new byte[0];
+        try {
+            image = FileUtils.readFileToByteArray(new File(path + File.separator +filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 }
