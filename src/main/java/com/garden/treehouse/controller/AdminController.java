@@ -3,9 +3,9 @@ package com.garden.treehouse.controller;
 import com.garden.treehouse.model.Product;
 import com.garden.treehouse.repos.ProductRepository;
 import com.garden.treehouse.services.ProductService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -127,13 +127,16 @@ public class AdminController {
 
                 var sep = File.separator;
                 String imageUrl = "/images/" + imageName;
-//                if (currentProduct.getImageUrl() != null)
-//                    Files.delete(Paths.get(currentProduct.getImageUrl()));
+                try {
+                    Files.delete(Paths.get(product.getImageUrl().replace("/images", path)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 currentProduct.setImageUrl(imageUrl);
 
                 BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(path  + sep + imageName));
+                        new FileOutputStream(path + sep + imageName));
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
@@ -184,7 +187,7 @@ public class AdminController {
 
         if (product != null && product.getImageUrl() != null) {
             try {
-                Files.delete(Paths.get("src/main/resources/static" + product.getImageUrl()));
+                Files.delete(Paths.get(product.getImageUrl().replace("/images", path)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -194,11 +197,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-        @GetMapping("/images/{filename}")
+    @GetMapping("/images/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
         byte[] image = new byte[0];
         try {
-            image = FileUtils.readFileToByteArray(new File(path + File.separator +filename));
+            image = FileUtils.readFileToByteArray(new File(path + File.separator + filename));
         } catch (IOException e) {
             e.printStackTrace();
         }
